@@ -1,42 +1,45 @@
 {
-  "name": "App_BDJ-back",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "dependencies": {
-    "@fastify/cookie": "^11.0.2",
-    "argon2": "^0.44.0",
-    "date-fns": "^4.1.0",
-    "fastify": "^5.6.1",
-    "fastify-type-provider-zod": "^6.1.0",
-    "jose": "^6.1.1",
-    "lolcatjs": "^2.4.3",
-    "node-crypto": "^1.0.0",
-    "postgres": "^3.4.7",
-    "zod": "^4.1.12",
-    "zod-validation-error": "^5.0.0"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^2.2.6",
-    "@tsconfig/node22": "^22.0.2",
-    "@types/node": "^24.7.2",
-    "typescript": "^5.9.3",
-    "vitest": "4.0.1"
-  },
-  "scripts": {
-    "build": "tsc",
-    "lint": "biome lint",
-    "format": "biome format --write",
-    "autofix": "biome check --write",
-    "test": "vitest run",
-    "docker:build": "docker compose -f .\\docker\\docker-compose.yml build",
-    "docker:run": "docker compose -f .\\docker\\docker-compose.yml up -d",
-    "docker:down": "docker compose -f .\\docker\\docker-compose.yml down && docker volume rm wap201_pg_data",
-    "docker:bash": "docker compose -f .\\docker\\docker-compose.yml exec db bash",
-    "docker:psql": "docker compose -f .\\docker\\docker-compose.yml exec db psql -U user"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.23.0"
+	"name": "App_BDJ-back",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"dependencies": {
+		"@fastify/cookie": "^11.0.2",
+		"argon2": "^0.44.0",
+		"date-fns": "^4.1.0",
+		"dotenv": "^17.2.3",
+		"fastify": "^5.6.1",
+		"fastify-type-provider-zod": "^6.1.0",
+		"jose": "^6.1.1",
+		"node-crypto": "^1.0.0",
+		"postgres": "^3.4.7",
+		"zod": "^4.1.12",
+		"zod-validation-error": "^5.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.6",
+		"@tsconfig/node22": "^22.0.2",
+		"@types/node": "^24.7.2",
+		"tsx": "^4.20.6",
+		"typescript": "^5.9.3",
+		"vitest": "4.0.1"
+	},
+	"scripts": {
+		"start": "node dist/index.js",
+		"dev": "tsx watch src/index.ts",
+		"build": "tsc",
+		"lint": "biome lint",
+		"format": "biome format --write",
+		"autofix": "biome check --write",
+		"test": "vitest run",
+		"docker:build": "docker compose -f .\\docker\\docker-compose.yml build",
+		"docker:run": "docker compose -f .\\docker\\docker-compose.yml up -d",
+		"docker:down": "docker compose -f .\\docker\\docker-compose.yml down && docker volume rm app_bdj_data",
+		"docker:bash": "docker compose -f .\\docker\\docker-compose.yml exec db bash",
+		"docker:psql": "docker compose -f .\\docker\\docker-compose.yml exec db psql -U user"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@10.23.0"
 }
