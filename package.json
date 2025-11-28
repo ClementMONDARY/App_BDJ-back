@@ -36,7 +36,7 @@
 		"docker:run": "docker compose -f .\\docker\\docker-compose.yml up -d",
 		"docker:down": "docker compose -f .\\docker\\docker-compose.yml down && docker volume rm app_bdj_data",
 		"docker:bash": "docker compose -f .\\docker\\docker-compose.yml exec db bash",
-		"docker:psql": "docker compose -f .\\docker\\docker-compose.yml exec db psql -U user"
+		"docker:psql": "docker compose -f .\\docker\\docker-compose.yml exec db psql -U user -d app_bdj"
 	},
 	"keywords": [],
 	"author": "",
