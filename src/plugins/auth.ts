@@ -28,7 +28,7 @@ export const verifyPassword = async (
 ): Promise<boolean> => {
 	try {
 		return await argon2.verify(hash, plain);
-	} catch (err) {
+	} catch (_err) {
 		return false;
 	}
 };
@@ -49,7 +49,7 @@ export const verifySessionToken = async (
 	try {
 		const { payload } = await jose.jwtVerify(token, JWT_SECRET);
 		return payload as unknown as UserPayload;
-	} catch (err) {
+	} catch (_err) {
 		return null;
 	}
 };
