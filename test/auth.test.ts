@@ -5,8 +5,8 @@ import {
 	validatorCompiler,
 } from "fastify-type-provider-zod";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import sql from "../src/db/db";
-import authRoutes from "../src/routes/auth/auth.routes";
+import sql from "../src/db/db.js";
+import authRoutes from "../src/routes/auth/auth.routes.js";
 
 describe("Auth Routes", () => {
 	let app: FastifyInstance;
@@ -24,6 +24,7 @@ describe("Auth Routes", () => {
 
 		// Cleanup DB
 		try {
+			await sql`DELETE FROM refresh_tokens`;
 			await sql`DELETE FROM user_auth`;
 			await sql`DELETE FROM users`;
 		} catch (e) {
@@ -56,7 +57,7 @@ describe("Auth Routes", () => {
 		expect(body.id).toBeDefined();
 	});
 
-	it("should login with valid credentials", async () => {
+	it("should login with valid credentials and return tokens", async () => {
 		const response = await app.inject({
 			method: "POST",
 			url: "/auth/login",
@@ -67,7 +68,9 @@ describe("Auth Routes", () => {
 		});
 
 		expect(response.statusCode).toBe(200);
-		expect(response.headers["set-cookie"]).toBeDefined();
+		const body = JSON.parse(response.payload);
+		expect(body.accessToken).toBeDefined();
+		expect(body.refreshToken).toBeDefined();
 	});
 
 	it("should fail login with invalid credentials", async () => {
@@ -83,8 +86,8 @@ describe("Auth Routes", () => {
 		expect(response.statusCode).toBe(401);
 	});
 
-	it("should access protected route with cookie", async () => {
-		// Login first to get cookie
+	it("should access protected route with access token", async () => {
+		// Login first to get token
 		const loginRes = await app.inject({
 			method: "POST",
 			url: "/auth/login",
@@ -94,18 +97,72 @@ describe("Auth Routes", () => {
 			},
 		});
 
-		const cookies = loginRes.headers["set-cookie"];
+		const { accessToken } = JSON.parse(loginRes.payload);
 
 		const response = await app.inject({
 			method: "GET",
 			url: "/auth/me",
 			headers: {
-				cookie: cookies,
+				authorization: `Bearer ${accessToken}`,
 			},
 		});
 
 		expect(response.statusCode).toBe(200);
 		const body = JSON.parse(response.payload);
 		expect(body.username).toBe("testuser");
+	});
+
+	it("should refresh token and rotate it", async () => {
+		// Login
+		const loginRes = await app.inject({
+			method: "POST",
+			url: "/auth/login",
+			payload: {
+				email: "test@example.com",
+				password: "password123",
+			},
+		});
+		const { refreshToken } = JSON.parse(loginRes.payload);
+
+		const refreshRes = await app.inject({
+			method: "POST",
+			url: "/auth/refresh",
+			payload: { refreshToken },
+		});
+
+		expect(refreshRes.statusCode).toBe(200);
+		const body = JSON.parse(refreshRes.payload);
+		expect(body.accessToken).toBeDefined();
+		expect(body.refreshToken).toBeDefined();
+		expect(body.refreshToken).not.toBe(refreshToken); // Rotation check
+	});
+
+	it("should logout and invalidate refresh token", async () => {
+		// Login
+		const loginRes = await app.inject({
+			method: "POST",
+			url: "/auth/login",
+			payload: {
+				email: "test@example.com",
+				password: "password123",
+			},
+		});
+		const { refreshToken } = JSON.parse(loginRes.payload);
+
+		const logoutRes = await app.inject({
+			method: "POST",
+			url: "/auth/logout",
+			payload: { refreshToken },
+		});
+
+		expect(logoutRes.statusCode).toBe(200);
+
+		// Try refresh again
+		const refreshRes = await app.inject({
+			method: "POST",
+			url: "/auth/refresh",
+			payload: { refreshToken },
+		});
+		expect(refreshRes.statusCode).toBe(401);
 	});
 });
