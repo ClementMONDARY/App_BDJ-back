@@ -29,3 +29,16 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export const messageResponseSchema = z.object({
 	message: z.string(),
 });
+
+export const tokenResponseSchema = z.object({
+	accessToken: z.string(),
+	refreshToken: z.string(),
+});
+
+export const refreshSchema = z.object({
+	refreshToken: z.string(),
+});
+
+export const logoutSchema = z.object({
+	refreshToken: z.string(),
+});
