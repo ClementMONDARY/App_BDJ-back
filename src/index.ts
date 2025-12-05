@@ -7,6 +7,8 @@ import {
 } from "fastify-type-provider-zod";
 import authRoutes from "./routes/auth/auth.routes.js";
 
+process.loadEnvFile();
+
 const app = Fastify({
 	logger: true,
 });
@@ -17,7 +19,7 @@ app.setSerializerCompiler(serializerCompiler);
 
 // Plugins
 app.register(cookie, {
-	secret: process.env.JWT_SECRET || "super-secret-dev-key-do-not-use-in-prod",
+	secret: process.env.JWT_SECRET,
 	hook: "onRequest",
 });
 

@@ -4,14 +4,20 @@ import sql from "../../db/db.js";
 import type { UserRow } from "../../models/user.model";
 import {
 	authenticate,
-	createSessionToken,
+	createAccessToken,
+	createRefreshToken,
 	hashPassword,
+	revokeRefreshToken,
 	verifyPassword,
+	verifyRefreshToken,
 } from "../../plugins/auth.js";
 import {
 	loginSchema,
+	logoutSchema,
 	messageResponseSchema,
+	refreshSchema,
 	signupSchema,
+	tokenResponseSchema,
 	userResponseSchema,
 } from "./auth.schema.js";
 
@@ -72,6 +78,10 @@ export default async function authRoutes(app: FastifyInstance) {
 		{
 			schema: {
 				body: loginSchema,
+				response: {
+					200: tokenResponseSchema,
+					401: messageResponseSchema,
+				},
 			},
 		},
 		async (request, reply) => {
@@ -94,29 +104,81 @@ export default async function authRoutes(app: FastifyInstance) {
 				return reply.status(401).send({ message: "Invalid email or password" });
 			}
 
-			const token = await createSessionToken({
+			const accessToken = await createAccessToken({
 				id: authData.id,
 				username: authData.username,
 				role: authData.role,
 			});
 
-			reply.setCookie("token", token, {
-				path: "/",
-				httpOnly: true,
-				secure: process.env.NODE_ENV === "production",
-				sameSite: "strict",
-				maxAge: 7 * 24 * 60 * 60, // 7 days
-			});
+			const refreshToken = await createRefreshToken(authData.id);
 
-			return reply.send({ message: "Logged in successfully" });
+			return reply.send({ accessToken, refreshToken });
+		},
+	);
+
+	// Refresh Token
+	app.withTypeProvider<ZodTypeProvider>().post(
+		"/refresh",
+		{
+			schema: {
+				body: refreshSchema,
+				response: {
+					200: tokenResponseSchema,
+					401: messageResponseSchema,
+				},
+			},
+		},
+		async (request, reply) => {
+			const { refreshToken } = request.body;
+			const userId = await verifyRefreshToken(refreshToken);
+
+			if (!userId) {
+				return reply.status(401).send({ message: "Invalid refresh token" });
+			}
+
+			const [user] = await sql`
+        SELECT id, username, role 
+        FROM users 
+        WHERE id = ${userId}
+      `;
+
+			if (!user) {
+				return reply.status(401).send({ message: "User not found" });
+			}
+
+			// Rotate tokens
+			await revokeRefreshToken(refreshToken);
+			const newAccessToken = await createAccessToken({
+				id: user.id,
+				username: user.username,
+				role: user.role,
+			});
+			const newRefreshToken = await createRefreshToken(user.id);
+
+			return reply.send({
+				accessToken: newAccessToken,
+				refreshToken: newRefreshToken,
+			});
 		},
 	);
 
 	// Logout
-	app.post("/logout", async (_request, reply) => {
-		reply.clearCookie("token", { path: "/" });
-		return reply.send({ message: "Logged out successfully" });
-	});
+	app.withTypeProvider<ZodTypeProvider>().post(
+		"/logout",
+		{
+			schema: {
+				body: logoutSchema,
+				response: {
+					200: messageResponseSchema,
+				},
+			},
+		},
+		async (request, reply) => {
+			const { refreshToken } = request.body;
+			await revokeRefreshToken(refreshToken);
+			return reply.send({ message: "Logged out successfully" });
+		},
+	);
 
 	// Me (Protected)
 	app.withTypeProvider<ZodTypeProvider>().get(

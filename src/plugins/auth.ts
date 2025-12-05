@@ -1,10 +1,14 @@
 import * as argon2 from "argon2";
+import { createHash, randomBytes } from "node:crypto";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import * as jose from "jose";
+import sql from "../db/db.js";
 
-const JWT_SECRET = new TextEncoder().encode(
-	process.env.JWT_SECRET || "super-secret-dev-key-do-not-use-in-prod",
-);
+process.loadEnvFile();
+
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+
+console.log(JWT_SECRET);
 
 export interface UserPayload {
 	id: string;
@@ -33,17 +37,30 @@ export const verifyPassword = async (
 	}
 };
 
-export const createSessionToken = async (
+export const createAccessToken = async (
 	payload: UserPayload,
 ): Promise<string> => {
 	return await new jose.SignJWT({ ...payload })
 		.setProtectedHeader({ alg: "HS256" })
 		.setIssuedAt()
-		.setExpirationTime("7d")
+		.setExpirationTime("5m") // Short lived
 		.sign(JWT_SECRET);
 };
 
-export const verifySessionToken = async (
+export const createRefreshToken = async (userId: string): Promise<string> => {
+	const token = randomBytes(32).toString("hex");
+	const hash = createHash("sha256").update(token).digest("hex");
+	const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000); // 14 days
+
+	await sql`
+    INSERT INTO refresh_tokens (user_id, token_hash, expires_at)
+    VALUES (${userId}, ${hash}, ${expiresAt})
+  `;
+
+	return token;
+};
+
+export const verifyAccessToken = async (
 	token: string,
 ): Promise<UserPayload | null> => {
 	try {
@@ -54,19 +71,41 @@ export const verifySessionToken = async (
 	}
 };
 
+export const verifyRefreshToken = async (
+	token: string,
+): Promise<string | null> => {
+	const hash = createHash("sha256").update(token).digest("hex");
+
+	const [data] = await sql`
+    SELECT user_id 
+    FROM refresh_tokens 
+    WHERE token_hash = ${hash} 
+    AND expires_at > NOW()
+  `;
+
+	if (!data) return null;
+	return data.user_id;
+};
+
+export const revokeRefreshToken = async (token: string): Promise<void> => {
+	const hash = createHash("sha256").update(token).digest("hex");
+	await sql`DELETE FROM refresh_tokens WHERE token_hash = ${hash}`;
+};
+
 export const authenticate = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	const token = request.cookies.token;
+	const authHeader = request.headers.authorization;
 
-	if (!token) {
+	if (!authHeader || !authHeader.startsWith("Bearer ")) {
 		return reply
 			.status(401)
 			.send({ message: "Unauthorized: No token provided" });
 	}
 
-	const user = await verifySessionToken(token);
+	const token = authHeader.split(" ")[1];
+	const user = await verifyAccessToken(token);
 
 	if (!user) {
 		return reply.status(401).send({ message: "Unauthorized: Invalid token" });
