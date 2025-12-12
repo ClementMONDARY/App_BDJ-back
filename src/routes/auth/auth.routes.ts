@@ -12,9 +12,14 @@ import {
 	verifyRefreshToken,
 } from "../../plugins/auth.js";
 import {
+	type MicrosoftUser,
+	verifyMicrosoftToken,
+} from "../../plugins/microsoft.js";
+import {
 	loginSchema,
 	logoutSchema,
 	messageResponseSchema,
+	microsoftLoginSchema,
 	refreshSchema,
 	signupSchema,
 	tokenResponseSchema,
@@ -201,6 +206,99 @@ export default async function authRoutes(app: FastifyInstance) {
 			}
 
 			return reply.send(userData);
+		},
+	);
+
+	// Microsoft Login
+	app.withTypeProvider<ZodTypeProvider>().post(
+		"/microsoft",
+		{
+			schema: {
+				body: microsoftLoginSchema,
+				response: {
+					200: tokenResponseSchema,
+					401: messageResponseSchema,
+				},
+			},
+		},
+		async (request, reply) => {
+			const { accessToken } = request.body;
+			let microsoftUser: MicrosoftUser;
+
+			try {
+				microsoftUser = await verifyMicrosoftToken(accessToken);
+			} catch (_err) {
+				return reply.status(401).send({ message: "Invalid Microsoft token" });
+			}
+
+			// Check if social account exists
+			const [socialAccount] = await sql`
+        SELECT user_id FROM social_accounts
+        WHERE provider = 'microsoft' AND provider_user_id = ${microsoftUser.id}
+      `;
+
+			let userId = socialAccount?.user_id;
+
+			if (!userId) {
+				const email = microsoftUser.userPrincipalName || microsoftUser.mail;
+
+				// Try to link with existing email user if email is present
+				if (email) {
+					const [existingUser] = await sql`
+            SELECT u.id FROM users u
+            JOIN user_auth ua ON ua.user_id = u.id
+            WHERE ua.email = ${email}
+          `;
+					if (existingUser) {
+						userId = existingUser.id;
+					}
+				}
+
+				// Create new user if still not found
+				if (!userId) {
+					// Handle username generation (must be unique)
+					let username = email
+						? email.split("@")[0]
+						: `user_${microsoftUser.id.slice(0, 8)}`;
+
+					if (!email) {
+						username += `_${Math.floor(Math.random() * 10000)}`;
+					}
+
+					const newUser = await sql.begin(async (sql) => {
+						const [user] = await sql`
+              INSERT INTO users (username, firstname, lastname, role)
+              VALUES (${username}, ${microsoftUser.givenName || null}, ${microsoftUser.surname || null}, 'user')
+              RETURNING id
+            `;
+						return user;
+					});
+					userId = newUser.id;
+				}
+
+				// Link social account
+				await sql`
+          INSERT INTO social_accounts (user_id, provider, provider_user_id, email)
+          VALUES (${userId}, 'microsoft', ${microsoftUser.id}, ${microsoftUser.userPrincipalName || microsoftUser.mail || null})
+          ON CONFLICT (provider, provider_user_id) DO NOTHING
+        `;
+			}
+
+			// Generate tokens
+			const [user] =
+				await sql`SELECT id, username, role FROM users WHERE id = ${userId}`;
+
+			const appAccessToken = await createAccessToken({
+				id: user.id,
+				username: user.username,
+				role: user.role,
+			});
+			const appRefreshToken = await createRefreshToken(user.id);
+
+			return reply.send({
+				accessToken: appAccessToken,
+				refreshToken: appRefreshToken,
+			});
 		},
 	);
 }

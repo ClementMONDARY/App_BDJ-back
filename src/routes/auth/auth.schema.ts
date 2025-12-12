@@ -13,6 +13,10 @@ export const loginSchema = z.object({
 	password: z.string(),
 });
 
+export const microsoftLoginSchema = z.object({
+	accessToken: z.string(),
+});
+
 export const userResponseSchema = z.object({
 	id: z.uuid(),
 	username: z.string(),
