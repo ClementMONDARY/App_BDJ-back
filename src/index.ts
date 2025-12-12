@@ -13,11 +13,9 @@ const app = Fastify({
 	logger: true,
 });
 
-// Zod validation configuration
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
-// Plugins
 app.register(cookie, {
 	secret: process.env.JWT_SECRET,
 	hook: "onRequest",
@@ -35,7 +33,6 @@ app.setErrorHandler((error: FastifyError, _request, reply) => {
 	});
 });
 
-// Start server
 const start = async () => {
 	try {
 		const port = Number(process.env.PORT) || 3000;
