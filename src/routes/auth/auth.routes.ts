@@ -19,7 +19,7 @@ import {
 	signupSchema,
 	tokenResponseSchema,
 	userResponseSchema,
-} from "./auth.schema.js";
+} from "./schema/auth.schema.js";
 
 export default async function authRoutes(app: FastifyInstance) {
 	// Signup

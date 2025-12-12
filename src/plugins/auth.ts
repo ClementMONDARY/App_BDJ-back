@@ -23,6 +23,7 @@ declare module "fastify" {
 }
 
 export const hashPassword = async (password: string): Promise<string> => {
+	console.log(argon2.hash(password));
 	return await argon2.hash(password);
 };
 
@@ -43,7 +44,7 @@ export const createAccessToken = async (
 	return await new jose.SignJWT({ ...payload })
 		.setProtectedHeader({ alg: "HS256" })
 		.setIssuedAt()
-		.setExpirationTime("5m") // Short lived
+		.setExpirationTime("15m")
 		.sign(JWT_SECRET);
 };
 
@@ -112,4 +113,18 @@ export const authenticate = async (
 	}
 
 	request.user = user;
+};
+
+export const requireRole = (allowedRoles: string[]) => {
+	return async (request: FastifyRequest, reply: FastifyReply) => {
+		if (!request.user) {
+			return reply.status(401).send({ message: "Authentication required" });
+		}
+
+		if (!allowedRoles.includes(request.user.role)) {
+			return reply
+				.status(403)
+				.send({ message: "Forbidden: Insufficient role" });
+		}
+	};
 };
