@@ -11,6 +11,7 @@ import {
 	ZPartialQuestion,
 	ZUserNewQuestion,
 	ZPublicQuestionList,
+	ZNewQuestion,
 } from "./schema/questions.schema.js";
 
 export default async function questionsRoutes(app: FastifyInstance) {
@@ -22,7 +23,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
 		{
 			preHandler: [authenticate, requireRole(["admin"])],
 			schema: {
-				body: ZQuestion,
+				body: ZNewQuestion,
 				response: {
 					201: ZQuestion,
 				},
@@ -123,7 +124,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
 					id: z.uuid(),
 				}),
 				response: {
-					204: z.object({
+					200: z.object({
 						message: z.string(),
 					}),
 				},
@@ -135,7 +136,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
                 DELETE FROM questions WHERE id = ${id}
             `;
 
-			return reply.status(204).send({ message: "Question deleted" });
+			return reply.status(200).send({ message: "Question deleted" });
 		},
 	);
 
@@ -182,7 +183,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
 		},
 		async (_, reply) => {
 			const Questions = await sql<PublicQuestion[]>`
-                SELECT subject, message, answer FROM questions WHERE status = "answered"
+                SELECT subject, message, answer FROM questions WHERE status = 'answered'
             `;
 
 			return reply.status(200).send(Questions);

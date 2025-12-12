@@ -6,6 +6,8 @@ import {
 	validatorCompiler,
 } from "fastify-type-provider-zod";
 import authRoutes from "./routes/auth/auth.routes.js";
+import questionsRoutes from "./routes/questions/question.routes.js";
+import suggestionsRoutes from "./routes/suggestions/suggestion.routes.js";
 
 process.loadEnvFile();
 
@@ -23,15 +25,8 @@ app.register(cookie, {
 
 // Routes
 app.register(authRoutes, { prefix: "/auth" });
-
-// Global Error Handler (Optional but good practice)
-app.setErrorHandler((error: FastifyError, _request, reply) => {
-	app.log.error(error);
-	reply.status(error.statusCode || 500).send({
-		message: error.message || "Internal Server Error",
-		code: error.code,
-	});
-});
+app.register(questionsRoutes, { prefix: "/questions" });
+app.register(suggestionsRoutes, { prefix: "/suggestions" });
 
 const start = async () => {
 	try {

@@ -14,7 +14,7 @@ import {
 	ZVoteSuggestionResponse,
 } from "./schema/suggestions.schema.js";
 
-export default async function questionsRoutes(app: FastifyInstance) {
+export default async function suggestionsRoutes(app: FastifyInstance) {
 	// --------------------------------------------
 	// CRUD
 	// --------------------------------------------
