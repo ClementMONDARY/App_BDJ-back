@@ -24,22 +24,18 @@ export const ZPartialQuestion = ZQuestion.omit({
 }).partial();
 export const ZListQuestions = ZQuestion.array();
 
-// User schema
+// Public schema
 // --------------------------------------------
 export const ZUserNewQuestion = ZQuestion.pick({
 	subject: true,
 	message: true,
 });
-
-// Public schema
-// --------------------------------------------
-export const ZPublicQuestion = ZQuestion.omit({
+const ZPublicQuestion = ZQuestion.omit({
 	id: true,
 	user_id: true,
 	status: true,
 	created_at: true,
 });
-
 export const ZPublicQuestionList = ZPublicQuestion.array();
 
 // Types

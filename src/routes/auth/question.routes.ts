@@ -5,12 +5,12 @@ import sql from "../../db/db.js";
 import { authenticate, requireRole } from "../../plugins/auth.js";
 import {
 	type Question,
+	type PublicQuestion,
 	ZQuestion,
+	ZListQuestions,
 	ZPartialQuestion,
 	ZUserNewQuestion,
-	ZListQuestions,
 	ZPublicQuestionList,
-	type PublicQuestion,
 } from "./schema/questions.schema.js";
 
 export default async function questionsRoutes(app: FastifyInstance) {
@@ -140,7 +140,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
 	);
 
 	// --------------------------------------------
-	// User
+	// Public
 	// --------------------------------------------
 	app.withTypeProvider<ZodTypeProvider>().post(
 		"/submit",
@@ -157,7 +157,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
 			const { subject, message } = request.body;
 			const userId = request.user.id;
 
-			const newQuestion = await sql.begin(async (sql) => {
+			const NewQuestion = await sql.begin(async (sql) => {
 				const [question] = await sql<Question[]>`
                     INSERT INTO questions (user_id, subject, message)
                     VALUES (${userId}, ${subject}, ${message})
@@ -167,15 +167,12 @@ export default async function questionsRoutes(app: FastifyInstance) {
 				return question;
 			});
 
-			return reply.status(201).send(newQuestion);
+			return reply.status(201).send(NewQuestion);
 		},
 	);
 
-	// --------------------------------------------
-	// Public
-	// --------------------------------------------
 	app.withTypeProvider<ZodTypeProvider>().get(
-		"/answered",
+		"/public",
 		{
 			schema: {
 				response: {
@@ -184,11 +181,11 @@ export default async function questionsRoutes(app: FastifyInstance) {
 			},
 		},
 		async (_, reply) => {
-			const questions = await sql<PublicQuestion[]>`
-                SELECT subject, message, answer, created_at FROM questions WHERE status = 'answered'
+			const Questions = await sql<PublicQuestion[]>`
+                SELECT subject, message, answer FROM questions WHERE status = "answered"
             `;
 
-			return reply.status(200).send(questions);
+			return reply.status(200).send(Questions);
 		},
 	);
 }
