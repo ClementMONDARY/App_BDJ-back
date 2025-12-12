@@ -12,6 +12,7 @@ import {
 	ZUserNewSuggestion,
 	ZPublicSuggestionList,
 	ZVoteSuggestionResponse,
+	ZNewSuggestion,
 } from "./schema/suggestions.schema.js";
 
 export default async function suggestionsRoutes(app: FastifyInstance) {
@@ -23,7 +24,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 		{
 			preHandler: [authenticate, requireRole(["admin"])],
 			schema: {
-				body: ZSuggestion,
+				body: ZNewSuggestion,
 				response: {
 					201: ZSuggestion,
 				},
@@ -124,7 +125,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 					id: z.uuid(),
 				}),
 				response: {
-					204: z.object({
+					200: z.object({
 						message: z.string(),
 					}),
 				},
@@ -136,7 +137,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
                 DELETE FROM suggestions WHERE id = ${id}
             `;
 
-			return reply.status(204).send({ message: "Suggestion deleted" });
+			return reply.status(200).send({ message: "Suggestion deleted" });
 		},
 	);
 
