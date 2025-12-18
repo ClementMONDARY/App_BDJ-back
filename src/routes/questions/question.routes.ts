@@ -30,12 +30,12 @@ export default async function questionsRoutes(app: FastifyInstance) {
 			},
 		},
 		async (request, reply) => {
-			const { user_id, subject, message, answer, status } = request.body;
+			const { user_id, message, answer, status } = request.body;
 
 			const Question = await sql.begin(async (sql) => {
 				const [question] = await sql<Question[]>`   
-                    INSERT INTO questions (user_id, subject, message, answer, status)
-                    VALUES (${user_id}, ${subject}, ${message}, ${answer}, ${status})
+                    INSERT INTO questions (user_id, message, answer, status)
+                    VALUES (${user_id}, ${message}, ${answer}, ${status})
                     RETURNING *
                 `;
 
@@ -155,13 +155,13 @@ export default async function questionsRoutes(app: FastifyInstance) {
 			},
 		},
 		async (request, reply) => {
-			const { subject, message } = request.body;
+			const { message } = request.body;
 			const userId = request.user.id;
 
 			const NewQuestion = await sql.begin(async (sql) => {
 				const [question] = await sql<Question[]>`
-                    INSERT INTO questions (user_id, subject, message)
-                    VALUES (${userId}, ${subject}, ${message})
+                    INSERT INTO questions (user_id, message)
+                    VALUES (${userId}, ${message})
                     RETURNING *
                 `;
 
@@ -183,7 +183,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
 		},
 		async (_, reply) => {
 			const Questions = await sql<PublicQuestion[]>`
-                SELECT subject, message, answer FROM questions WHERE status = 'answered'
+                SELECT message, answer FROM questions WHERE status = 'answered'
             `;
 
 			return reply.status(200).send(Questions);

@@ -5,7 +5,6 @@ export const ZStatus = z.enum(["pending", "answered", "rejected"]);
 export const ZQuestion = z.object({
 	id: z.uuid(),
 	user_id: z.uuid(),
-	subject: z.string(),
 	message: z.string().max(250),
 	answer: z.string().nullable(),
 	status: ZStatus.default("pending"),
@@ -27,14 +26,11 @@ export const ZListQuestions = ZQuestion.array();
 // Public schema
 // --------------------------------------------
 export const ZUserNewQuestion = ZQuestion.pick({
-	subject: true,
 	message: true,
 });
-const ZPublicQuestion = ZQuestion.omit({
-	id: true,
-	user_id: true,
-	status: true,
-	created_at: true,
+const ZPublicQuestion = ZQuestion.pick({
+	message: true,
+	answer: true,
 });
 export const ZPublicQuestionList = ZPublicQuestion.array();
 
