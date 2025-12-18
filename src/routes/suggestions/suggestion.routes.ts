@@ -2,17 +2,20 @@ import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import sql from "../../db/db.js";
-import { authenticate, requireRole } from "../../plugins/auth.js";
+import {
+	authenticate,
+	requireRole,
+	verifyAccessToken,
+} from "../../plugins/auth.js";
 import {
 	type Suggestion,
-	type PublicSuggestion,
 	ZSuggestion,
 	ZListSuggestions,
 	ZPartialSuggestion,
 	ZUserNewSuggestion,
-	ZPublicSuggestionList,
 	ZVoteSuggestionResponse,
 	ZNewSuggestion,
+	ZSuggestionList,
 } from "./schema/suggestions.schema.js";
 
 export default async function suggestionsRoutes(app: FastifyInstance) {
@@ -31,12 +34,12 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 			},
 		},
 		async (request, reply) => {
-			const { user_id, title, content, vote_count } = request.body;
+			const { user_id, title, content, upvotes, downvotes } = request.body;
 
 			const Suggestion = await sql.begin(async (sql) => {
 				const [suggestion] = await sql<Suggestion[]>`   
-                    INSERT INTO suggestions (user_id, title, content, vote_count)
-                    VALUES (${user_id}, ${title}, ${content}, ${vote_count})
+                    INSERT INTO suggestions (user_id, title, content, upvotes, downvotes)
+                    VALUES (${user_id}, ${title}, ${content}, ${upvotes}, ${downvotes})
                     RETURNING *
                 `;
 
@@ -178,13 +181,35 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 		{
 			schema: {
 				response: {
-					200: ZPublicSuggestionList,
+					200: ZSuggestionList,
 				},
 			},
 		},
-		async (_request, reply) => {
-			const suggestions = await sql<PublicSuggestion[]>`
-                SELECT user_id,title, content, vote_count, created_at FROM suggestions
+		async (request, reply) => {
+			const authHeader = request.headers.authorization;
+			let userId: string | null = null;
+
+			if (authHeader?.startsWith("Bearer ")) {
+				const token = authHeader.split(" ")[1];
+				const user = await verifyAccessToken(token);
+				if (user) {
+					userId = user.id;
+				}
+			}
+
+			if (userId) {
+				const suggestions = await sql<Suggestion[]>`
+                    SELECT 
+                        s.id, s.user_id, s.title, s.content, s.upvotes, s.downvotes, s.created_at,
+                        v.type as user_vote
+                    FROM suggestions s
+                    LEFT JOIN suggestion_votes v ON s.id = v.suggestion_id AND v.user_id = ${userId}
+                `;
+				return reply.status(200).send(suggestions);
+			}
+
+			const suggestions = await sql<Suggestion[]>`
+                SELECT *, NULL as user_vote FROM suggestions
             `;
 
 			return reply.status(200).send(suggestions);
@@ -211,8 +236,6 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 			const { id } = request.params;
 			const { type } = request.body;
 
-			const increment = type === "up" ? 1 : -1;
-
 			const result = await sql.begin(async (sql) => {
 				const [existingVote] = await sql`
                     SELECT id, type FROM suggestion_votes
@@ -220,7 +243,8 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
                 `;
 
 				let message = "";
-				let voteDelta = 0;
+				let upvoteDelta = 0;
+				let downvoteDelta = 0;
 
 				// Scenario 1: New vote
 				if (!existingVote) {
@@ -228,7 +252,8 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
                         INSERT INTO suggestion_votes (suggestion_id, user_id, type)
                         VALUES (${id}, ${request.user.id}, ${type})
                     `;
-					voteDelta = increment;
+					if (type === "up") upvoteDelta = 1;
+					else downvoteDelta = 1;
 					message = `Suggestion ${type}voted`;
 
 					// Scenario 2: Toggle vote
@@ -237,7 +262,8 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
                         DELETE FROM suggestion_votes
                         WHERE id = ${existingVote.id}
                     `;
-					voteDelta = -increment;
+					if (type === "up") upvoteDelta = -1;
+					else downvoteDelta = -1;
 					message = "Vote removed";
 
 					// Scenario 3: Switch vote
@@ -247,26 +273,38 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
                         SET type = ${type}
                         WHERE id = ${existingVote.id}
                     `;
-					voteDelta = increment * 2;
+					if (type === "up") {
+						// Was down, now up
+						downvoteDelta = -1;
+						upvoteDelta = 1;
+					} else {
+						// Was up, now down
+						upvoteDelta = -1;
+						downvoteDelta = 1;
+					}
 					message = "Vote switched";
 				}
 
 				const [updatedSuggestion] = await sql`
                     UPDATE suggestions
-                    SET vote_count = vote_count + ${voteDelta}
+                    SET 
+                        upvotes = upvotes + ${upvoteDelta},
+                        downvotes = downvotes + ${downvoteDelta}
                     WHERE id = ${id}
-                    RETURNING vote_count
+                    RETURNING upvotes, downvotes
                 `;
 
 				return {
-					vote_count: updatedSuggestion.vote_count,
+					upvotes: updatedSuggestion.upvotes,
+					downvotes: updatedSuggestion.downvotes,
 					message,
 				};
 			});
 
 			return reply.status(200).send({
 				message: result.message,
-				new_vote_count: result.vote_count,
+				new_upvotes: result.upvotes,
+				new_downvotes: result.downvotes,
 			});
 		},
 	);

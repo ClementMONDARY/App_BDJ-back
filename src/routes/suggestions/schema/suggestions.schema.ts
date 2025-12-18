@@ -7,7 +7,8 @@ export const ZSuggestion = z.object({
 	user_id: z.uuid(),
 	title: z.string().max(255),
 	content: z.string().max(1000),
-	vote_count: z.number().default(0),
+	upvotes: z.number().default(0),
+	downvotes: z.number().default(0),
 	created_at: z.date(),
 });
 
@@ -29,15 +30,15 @@ export const ZUserNewSuggestion = ZSuggestion.pick({
 	title: true,
 	content: true,
 });
-const ZPublicSuggestion = ZSuggestion.omit({
-	id: true,
+export const ZEnrichedSuggestion = ZSuggestion.extend({
+	user_vote: z.enum(["up", "down"]).nullable().optional(),
 });
-export const ZPublicSuggestionList = ZPublicSuggestion.array();
+export const ZSuggestionList = ZEnrichedSuggestion.array();
 export const ZVoteSuggestionResponse = z.object({
 	message: z.string(),
-	new_vote_count: z.number(),
+	new_upvotes: z.number(),
+	new_downvotes: z.number(),
 });
 
 // Types
 export type Suggestion = z.infer<typeof ZSuggestion>;
-export type PublicSuggestion = z.infer<typeof ZPublicSuggestion>;
