@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS questions (
 );
 
 INSERT INTO questions (id, user_id, message, answer, status, created_at) VALUES
-('f029d7ba-9fba-4954-8e0d-1482e7c6b471', 'ea9016f3-26b1-407e-8b66-9ee860b55c50', 'A party in the woods', 'Great idea, lets do this !', 'answered', '2025-12-12 14:35:51.371'),
+('f029d7ba-9fba-4954-8e0d-1482e7c6b471', 'ea9016f3-26b1-407e-8b66-9ee860b55c50', 'Rorem ipsum dolor sit amet, consectetur adipiscing elit ?', 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.\n\nUt commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl. Curabitur tempus urna at turpis condimentum lobortis.', 'answered', '2025-12-12 14:35:51.371'),
 ('ff18da8b-bad1-4648-96c0-d1ea62bd0ffa', 'ea9016f3-26b1-407e-8b66-9ee860b55c50', 'A secret santa among all classes', NULL, 'pending', '2025-12-12 14:37:44.654');
 
 CREATE INDEX IF NOT EXISTS idx_questions_user_id ON questions(user_id);

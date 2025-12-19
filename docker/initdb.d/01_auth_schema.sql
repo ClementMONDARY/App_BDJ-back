@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS user_auth (
     password_hash TEXT NOT NULL
 );
 INSERT INTO users (id, username, firstname, lastname, avatar, bio, role, created_at) VALUES
-('ea9016f3-26b1-407e-8b66-9ee860b55c50', 'testuser', 'Test', 'User', NULL, NULL, 'admin', '2025-12-12T14:58:29.680Z'::TIMESTAMPTZ);
+('ea9016f3-26b1-407e-8b66-9ee860b55c50', 'testuser', 'Test', 'User', 'https://avatar.iran.liara.run/public?username=testuser', NULL, 'admin', '2025-12-12T14:58:29.680Z'::TIMESTAMPTZ);
 
 INSERT INTO user_auth (user_id, email, password_hash) VALUES
 ('ea9016f3-26b1-407e-8b66-9ee860b55c50', 'test@example.com', '$argon2id$v=19$m=65536,t=3,p=4$J09SdGH1kvRtUbW+Z8omSw$2MFFtucDvfp1b8thEaBgu6FGHgqEK84LEiPZYrS2MmI');
