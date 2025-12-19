@@ -51,12 +51,13 @@ export default async function authRoutes(app: FastifyInstance) {
 			}
 
 			const passwordHash = await hashPassword(password);
+			const avatarUrl = `https://avatar.iran.liara.run/public?username=${username}`;
 
 			// Transactional insert
 			const newUser = await sql.begin(async (sql) => {
 				const [user] = await sql<UserRow[]>`
-        INSERT INTO users (username, firstname, lastname)
-        VALUES (${username}, ${firstname || null}, ${lastname || null})
+        INSERT INTO users (username, firstname, lastname, avatar)
+        VALUES (${username}, ${firstname || null}, ${lastname || null}, ${avatarUrl})
         RETURNING *
       `;
 

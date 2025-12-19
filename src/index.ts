@@ -1,6 +1,6 @@
 import cookie from "@fastify/cookie";
 import "dotenv/config";
-import Fastify, { type FastifyError } from "fastify";
+import Fastify from "fastify";
 import {
 	serializerCompiler,
 	validatorCompiler,
@@ -8,6 +8,7 @@ import {
 import authRoutes from "./routes/auth/auth.routes.js";
 import questionsRoutes from "./routes/questions/question.routes.js";
 import suggestionsRoutes from "./routes/suggestions/suggestion.routes.js";
+import usersRoutes from "./routes/users/users.routes.js";
 
 process.loadEnvFile();
 
@@ -27,6 +28,7 @@ app.register(cookie, {
 app.register(authRoutes, { prefix: "/auth" });
 app.register(questionsRoutes, { prefix: "/questions" });
 app.register(suggestionsRoutes, { prefix: "/suggestions" });
+app.register(usersRoutes, { prefix: "/users" });
 
 const start = async () => {
 	try {
