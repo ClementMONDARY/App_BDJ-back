@@ -1,6 +1,9 @@
 import cookie from "@fastify/cookie";
 import "dotenv/config";
 import Fastify from "fastify";
+import fastifyMultipart from "@fastify/multipart";
+import fastifyStatic from "@fastify/static";
+import path from "node:path";
 import {
 	serializerCompiler,
 	validatorCompiler,
@@ -18,6 +21,24 @@ const app = Fastify({
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
+
+app.register(fastifyMultipart, {
+	limits: {
+		fileSize: 2 * 1024 * 1024, // 2MB
+	},
+});
+
+app.register(fastifyStatic, {
+	root: path.join(process.cwd(), "assets"),
+	prefix: "/assets/",
+	decorateReply: false, // Important when registering static twice
+});
+
+app.register(fastifyStatic, {
+	root: path.join(process.cwd(), "uploads"),
+	prefix: "/uploads/",
+	decorateReply: false,
+});
 
 app.register(cookie, {
 	secret: process.env.JWT_SECRET,

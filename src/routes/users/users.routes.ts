@@ -1,5 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
+import fs from "node:fs/promises";
+import path from "node:path";
 import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate, hashPassword } from "../../plugins/auth.js";
@@ -147,6 +149,65 @@ export default async function usersRoutes(app: FastifyInstance) {
             `;
 
 			return reply.send({ message: "Account deleted successfully" });
+		},
+	);
+
+	// Upload Avatar
+	app.post(
+		"/me/avatar",
+		{
+			preHandler: [authenticate],
+		},
+		async (request, reply) => {
+			const data = await request.file();
+
+			if (!data) {
+				return reply.status(400).send({ message: "No file uploaded" });
+			}
+
+			const allowedMimeTypes = [
+				"image/png",
+				"image/jpeg",
+				"image/jpg",
+				"image/webp",
+			];
+			if (!allowedMimeTypes.includes(data.mimetype)) {
+				return reply.status(400).send({ message: "Invalid file type" });
+			}
+
+			const user = request.user;
+			const extension = path.extname(data.filename);
+			const filename = `user-${user.id}-${Date.now()}${extension}`;
+			const uploadDir = path.join(process.cwd(), "uploads", "avatars");
+			const filepath = path.join(uploadDir, filename);
+
+			await fs.mkdir(uploadDir, { recursive: true });
+
+			await fs.writeFile(filepath, await data.toBuffer());
+			// Construct URL
+			const baseUrl =
+				process.env.BASE_URL || `${request.protocol}://${request.hostname}`;
+			const avatarUrl = `${baseUrl}/uploads/avatars/${filename}`;
+
+			const [oldUser] = await sql<PublicProfile[]>`
+        SELECT avatar FROM users WHERE id = ${user.id}
+      `;
+
+			await sql`
+        UPDATE users SET avatar = ${avatarUrl} WHERE id = ${user.id}
+      `;
+
+			if (oldUser?.avatar && oldUser.avatar.includes("/uploads/avatars/")) {
+				try {
+					const oldFilename = path.basename(oldUser.avatar);
+					const oldFilepath = path.join(uploadDir, oldFilename);
+					await fs.unlink(oldFilepath);
+				} catch (err) {
+					console.error("Failed to delete old avatar:", err);
+				}
+			}
+
+			return reply.send({ avatar: avatarUrl });
 		},
 	);
 }

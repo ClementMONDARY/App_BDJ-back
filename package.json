@@ -5,6 +5,8 @@
 	"main": "index.js",
 	"dependencies": {
 		"@fastify/cookie": "^11.0.2",
+		"@fastify/multipart": "^9.3.0",
+		"@fastify/static": "^9.0.0",
 		"argon2": "^0.44.0",
 		"date-fns": "^4.1.0",
 		"dotenv": "^17.2.3",

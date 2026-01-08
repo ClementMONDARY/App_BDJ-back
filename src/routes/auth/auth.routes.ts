@@ -1,3 +1,5 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import sql from "../../db/db.js";
@@ -51,7 +53,36 @@ export default async function authRoutes(app: FastifyInstance) {
 			}
 
 			const passwordHash = await hashPassword(password);
-			const avatarUrl = `https://avatar.iran.liara.run/public?username=${username}`;
+
+			// Logic to select random avatar
+			let avatarUrl: string;
+			try {
+				const avatarsDir = path.join(
+					process.cwd(),
+					"assets",
+					"images",
+					"avatars",
+				);
+				const files = await fs.readdir(avatarsDir);
+				const imageFiles = files.filter((file) =>
+					/\.(png|jpg|jpeg|gif|webp)$/i.test(file),
+				);
+
+				if (imageFiles.length > 0) {
+					const randomFile =
+						imageFiles[Math.floor(Math.random() * imageFiles.length)];
+					const baseUrl =
+						process.env.BASE_URL || `${request.protocol}://${request.hostname}`;
+					avatarUrl = `${baseUrl}/assets/images/avatars/${randomFile}`;
+				} else {
+					// Fallback if no images found
+					avatarUrl = `https://avatar.iran.liara.run/public?username=${username}`;
+				}
+			} catch (error) {
+				console.error("Error reading avatars directory:", error);
+				// Fallback on error
+				avatarUrl = `https://avatar.iran.liara.run/public?username=${username}`;
+			}
 
 			// Transactional insert
 			const newUser = await sql.begin(async (sql) => {
