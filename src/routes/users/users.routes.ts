@@ -90,11 +90,11 @@ export default async function usersRoutes(app: FastifyInstance) {
                             UPDATE users
                             SET ${sql(userFields)}
                             WHERE id = ${id}
-                            RETURNING id, username, avatar, bio, created_at
+                            RETURNING id, username, avatar, bio, role, created_at
                         `;
 					} else {
 						[user] = await sql<PublicProfile[]>`
-                            SELECT id, username, avatar, bio, created_at
+                            SELECT id, username, avatar, bio, role, created_at
                             FROM users
                             WHERE id = ${id}
                         `;
