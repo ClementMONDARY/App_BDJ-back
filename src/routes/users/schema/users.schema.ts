@@ -18,7 +18,6 @@ export const ZUpdateUser = z.object({
 	lastname: z.string().optional(),
 	username: z.string().min(3).max(30).optional(),
 	bio: z.string().optional(),
-	avatar: z.string().optional(),
 	email: z.email().optional(),
 	password: z.string().min(8).optional(),
 });

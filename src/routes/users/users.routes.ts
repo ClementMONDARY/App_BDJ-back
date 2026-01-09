@@ -184,7 +184,6 @@ export default async function usersRoutes(app: FastifyInstance) {
 			await fs.mkdir(uploadDir, { recursive: true });
 
 			await fs.writeFile(filepath, await data.toBuffer());
-			// Construct URL
 			const baseUrl =
 				process.env.BASE_URL || `${request.protocol}://${request.hostname}`;
 			const avatarUrl = `${baseUrl}/uploads/avatars/${filename}`;
