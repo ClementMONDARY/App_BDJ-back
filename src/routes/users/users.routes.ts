@@ -144,6 +144,21 @@ export default async function usersRoutes(app: FastifyInstance) {
 					.send({ message: "You can only delete your own account" });
 			}
 
+			const [user] = await sql<PublicProfile[]>`
+        SELECT avatar FROM users WHERE id = ${id}
+      `;
+
+			if (user?.avatar && user.avatar.includes("/uploads/avatars/")) {
+				try {
+					const uploadDir = path.join(process.cwd(), "uploads", "avatars");
+					const filename = path.basename(user.avatar);
+					const filepath = path.join(uploadDir, filename);
+					await fs.unlink(filepath);
+				} catch (err) {
+					console.error("Failed to delete user avatar:", err);
+				}
+			}
+
 			await sql`
                 DELETE FROM users WHERE id = ${id}
             `;
