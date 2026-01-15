@@ -12,6 +12,11 @@ import authRoutes from "./routes/auth/auth.routes.js";
 import questionsRoutes from "./routes/questions/question.routes.js";
 import suggestionsRoutes from "./routes/suggestions/suggestion.routes.js";
 import usersRoutes from "./routes/users/users.routes.js";
+import articlesRoutes from "./routes/articles/articles.routes.js";
+import notificationsRoutes from "./routes/notifications/notifications.routes.js";
+import forumRoutes from "./routes/forum/forum.routes.js";
+import eventsRoutes from "./routes/events/events.routes.js";
+import messagingRoutes from "./routes/messaging/messaging.routes.js";
 
 process.loadEnvFile();
 
@@ -50,6 +55,11 @@ app.register(authRoutes, { prefix: "/auth" });
 app.register(questionsRoutes, { prefix: "/questions" });
 app.register(suggestionsRoutes, { prefix: "/suggestions" });
 app.register(usersRoutes, { prefix: "/users" });
+app.register(articlesRoutes, { prefix: "/articles" });
+app.register(notificationsRoutes, { prefix: "/notifications" });
+app.register(forumRoutes, { prefix: "/forum" });
+app.register(eventsRoutes, { prefix: "/events" });
+app.register(messagingRoutes, { prefix: "/messaging" });
 
 const start = async () => {
 	try {

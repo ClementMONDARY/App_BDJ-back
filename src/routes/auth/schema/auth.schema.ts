@@ -20,7 +20,7 @@ export const userResponseSchema = z.object({
 	role: z.string(),
 	firstname: z.string().nullable(),
 	lastname: z.string().nullable(),
-	created_at: z.string().or(z.date()),
+	created_at: z.date(),
 });
 
 export type SignupInput = z.infer<typeof signupSchema>;
