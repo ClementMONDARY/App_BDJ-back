@@ -1,0 +1,41 @@
+CREATE TABLE IF NOT EXISTS topics (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    author_id UUID NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    content TEXT,
+    cover_image TEXT,
+    attachment_urls TEXT[],
+    view_count INT DEFAULT 0 NOT NULL,
+    like_count INT DEFAULT 0 NOT NULL,
+    msg_count INT DEFAULT 0 NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS posts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    topic_id UUID NOT NULL REFERENCES topics(id) ON DELETE CASCADE,
+    author_id UUID NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+    content TEXT NOT NULL,
+    parent_id UUID REFERENCES posts(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS topic_likes (
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    topic_id UUID REFERENCES topics(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    PRIMARY KEY (user_id, topic_id)
+);
+
+CREATE TABLE IF NOT EXISTS topic_follows (
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    topic_id UUID REFERENCES topics(id) ON DELETE CASCADE,
+    followed_at TIMESTAMPTZ DEFAULT NOW(),
+    PRIMARY KEY (user_id, topic_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_posts_topic_id ON posts(topic_id);
+CREATE INDEX IF NOT EXISTS idx_posts_parent_id ON posts(parent_id);
+

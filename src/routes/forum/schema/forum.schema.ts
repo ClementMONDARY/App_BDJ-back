@@ -1,0 +1,55 @@
+import { z } from "zod";
+
+export const ZTopic = z.object({
+	id: z.uuid(),
+	author_id: z.uuid().nullable(),
+	title: z.string(),
+	content: z.string().nullable(),
+	cover_image: z.string().nullable(),
+	attachment_urls: z.array(z.string()).nullable(),
+	view_count: z.number().int(),
+	like_count: z.number().int(),
+	msg_count: z.number().int(),
+	created_at: z.date(),
+	updated_at: z.date(),
+});
+
+export const ZPost = z.object({
+	id: z.uuid(),
+	topic_id: z.uuid(),
+	author_id: z.uuid().nullable(),
+	content: z.string(),
+	parent_id: z.uuid().nullable(),
+	created_at: z.date(),
+	updated_at: z.date(),
+});
+
+// Inputs
+export const ZNewTopic = z.object({
+	title: z.string().min(1),
+	content: z.string().min(1),
+	cover_image: z.string().optional(),
+	attachment_urls: z.array(z.string()).max(5).optional(),
+});
+
+export const ZNewPost = z.object({
+	content: z.string().min(1),
+	parent_id: z.uuid().optional(),
+});
+
+// Lists
+export const ZTopicList = z.array(ZTopic);
+export const ZPostList = z.array(ZPost);
+
+export type Topic = z.infer<typeof ZTopic>;
+export type Post = z.infer<typeof ZPost>;
+
+export const ZToggleLikeResponse = z.object({
+	message: z.string(),
+	likes: z.number().int(),
+});
+
+export const ZToggleFollowResponse = z.object({
+	message: z.string(),
+	is_following: z.boolean(),
+});

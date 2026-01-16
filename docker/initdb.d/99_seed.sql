@@ -20,17 +20,14 @@ INSERT INTO articles (id, author_id, title, content, cover_image, view_count, li
 INSERT INTO article_likes (user_id, article_id) VALUES
 ('b0000000-0000-4000-a000-000000000002', 'c0000000-0000-4000-a000-000000000001');
 
--- 3. Forum
-INSERT INTO categories (id, name, slug, description) VALUES
-('d0000000-0000-4000-a000-000000000001', 'General', 'general', 'General discussions'),
-('d0000000-0000-4000-a000-000000000002', 'Tech Support', 'tech-support', 'Get help');
+-- 3. Forum (Topics & Posts, plus de categories)
+INSERT INTO topics (id, author_id, title, content, cover_image, attachment_urls, msg_count) VALUES
+('e0000000-0000-4000-a000-000000000001', 'a0000000-0000-4000-a000-000000000001', 'Hello World', 'Just saying hello to everyone!', 'https://picsum.photos/seed/topic1/800/400', '{"https://picsum.photos/seed/topic1/600/200"}', 3);
 
-INSERT INTO topics (id, author_id, category_id, title, slug, content, msg_count) VALUES
-('e0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'd0000000-0000-4000-a000-000000000001', 'Hello World', 'hello-world', 'Just saying hello!', 2);
-
-INSERT INTO posts (id, topic_id, author_id, content) VALUES
-('f0000000-0000-4000-a000-000000000001', 'e0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'Just saying hello!'),
-('f0000000-0000-4000-a000-000000000002', 'e0000000-0000-4000-a000-000000000001', 'a0000000-0000-4000-a000-000000000001', 'Hi Bob! Welcome!');
+INSERT INTO posts (id, topic_id, author_id, parent_id, content) VALUES
+('f0000000-0000-4000-a000-000000000001', 'e0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', null, 'Just saying hello!'),
+('f0000000-0000-4000-a000-000000000002', 'e0000000-0000-4000-a000-000000000001', 'a0000000-0000-4000-a000-000000000001', null, 'Hi Bob! Welcome!'),
+('f0000000-0000-4000-a000-000000000003', 'e0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'f0000000-0000-4000-a000-000000000002', 'Your so kind Alice!');
 
 -- 4. Events (Utilisation de l'ID de Bob b000...0002 comme organisateur)
 INSERT INTO events (id, organizer_id, title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees) VALUES
@@ -42,7 +39,7 @@ INSERT INTO event_registrations (event_id, user_id, status) VALUES
 
 -- 5. Notifications
 INSERT INTO notifications (id, user_id, type, title, content, is_read, resource_data) VALUES
-('a0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'reply', 'New reply', 'Alice replied.', FALSE, '{"topic_id": "e0000000-0000-4000-a000-000000000001"}');
+('a0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'forum', 'New topic: Hello World', 'Alice created a new topic named "Hello World", are you interested?', FALSE, '{"topic_id": "e0000000-0000-4000-a000-000000000001"}');
 
 -- 6. Messaging (CORRIGÉ : IDs valides et nombre de colonnes correct)
 -- Conversation DIRECT entre Alice et Bob
