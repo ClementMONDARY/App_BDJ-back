@@ -10,6 +10,7 @@ import {
 	ZUpdateArticle,
 	type Article,
 } from "./schema/articles.schema.js";
+import { createNotification } from "../../services/notifications.service.js";
 
 export default async function articlesRoutes(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(
@@ -211,6 +212,21 @@ export default async function articlesRoutes(app: FastifyInstance) {
 				await sql.begin(async (sql) => {
 					await sql`INSERT INTO article_likes (user_id, article_id) VALUES (${userId}, ${id})`;
 					await sql`UPDATE articles SET like_count = like_count + 1 WHERE id = ${id}`;
+
+					const [article] = await sql<
+						Article[]
+					>`SELECT author_id, title FROM articles WHERE id = ${id}`;
+					if (article?.author_id && article.author_id !== userId) {
+						await createNotification({
+							userId: article.author_id,
+							type: "like",
+							title: `New like on "${article.title}"`,
+							content: `${request.user.username} liked your article.`,
+							resourceData: { article_id: id },
+							sqlTransaction: sql,
+							ensureUnique: true,
+						});
+					}
 				});
 			}
 

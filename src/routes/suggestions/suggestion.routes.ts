@@ -17,6 +17,7 @@ import {
 	ZNewSuggestion,
 	ZSuggestionList,
 } from "./schema/suggestions.schema.js";
+import { createNotification } from "../../services/notifications.service.js";
 
 export default async function suggestionsRoutes(app: FastifyInstance) {
 	// --------------------------------------------
@@ -291,8 +292,20 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
                         upvotes = upvotes + ${upvoteDelta},
                         downvotes = downvotes + ${downvoteDelta}
                     WHERE id = ${id}
-                    RETURNING upvotes, downvotes
+                    RETURNING user_id, title, upvotes, downvotes
                 `;
+
+				if (type === "up" && updatedSuggestion.user_id !== request.user.id) {
+					await createNotification({
+						userId: updatedSuggestion.user_id,
+						type: "like",
+						title: `Someone liked "${updatedSuggestion.title}"`,
+						content: `${request.user.username} liked your suggestion.`,
+						resourceData: { suggestion_id: id },
+						sqlTransaction: sql,
+						ensureUnique: true,
+					});
+				}
 
 				return {
 					upvotes: updatedSuggestion.upvotes,
