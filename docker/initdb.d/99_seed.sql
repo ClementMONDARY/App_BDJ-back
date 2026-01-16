@@ -41,18 +41,17 @@ INSERT INTO event_registrations (event_id, user_id, status) VALUES
 INSERT INTO notifications (id, user_id, type, title, content, is_read, resource_data) VALUES
 ('a0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'forum', 'New topic: Hello World', 'Alice created a new topic named "Hello World", are you interested?', FALSE, '{"topic_id": "e0000000-0000-4000-a000-000000000001"}');
 
--- 6. Messaging (CORRIGÉ : IDs valides et nombre de colonnes correct)
--- Conversation DIRECT entre Alice et Bob
-INSERT INTO conversations (id, type) VALUES
-('d0000000-0000-4000-a000-000000000001', 'direct');
+-- 6. Messaging
+-- Conversation entre Alice et Bob
+INSERT INTO conversations (id, title) VALUES
+('d0000000-0000-4000-a000-000000000001', 'Alice & Bob');
 
+-- Conversation participants
 INSERT INTO conversation_participants (conversation_id, user_id) VALUES
 ('d0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002'), -- Bob
 ('d0000000-0000-4000-a000-000000000001', 'a0000000-0000-4000-a000-000000000001'); -- Alice
 
--- Messages : (conversation_id, sender_id, content) -> on retire l'ID du message car souvent auto-généré, sinon ajoutez l'ID en premier.
--- Je suppose ici que votre table messages a un ID auto (DEFAULT gen_random_uuid()). 
--- Si vous devez forcer l'ID du message, ajoutez la colonne ID.
+-- Conversation messages
 INSERT INTO messages (conversation_id, sender_id, content) VALUES
 ('d0000000-0000-4000-a000-000000000001', 'a0000000-0000-4000-a000-000000000001', 'Hey Admin, found a bug!'),
 ('d0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'Thanks Alice, please report it.');

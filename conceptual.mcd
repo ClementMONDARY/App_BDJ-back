@@ -17,7 +17,7 @@ NOTIFICATION: type, title, content, is_read, created_at, resource_data
 :
 
 BELONGS_TO_CONV, 11 MESSAGE, 0N CONVERSATION
-MESSAGE: content, attachment_url, created_at
+MESSAGE: content, attachment_urls, created_at
 SENDS, 11 MESSAGE, 0N USER
 USER: username, avatar, role, firstname, lastname, bio
 :
@@ -26,7 +26,7 @@ WRITES, 11 POST, 0N USER
 :
 
 :
-CONVERSATION: type, title, updated_at
+CONVERSATION: title, updated_at
 PARTICIPATES, 0N USER, 0N CONVERSATION: joined_at, last_read_msg_id
 REGISTERS, 0N USER, 0N EVENT: registered_at, status
 STARTS, 11 TOPIC, 0N USER
