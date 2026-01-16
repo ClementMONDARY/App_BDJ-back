@@ -36,13 +36,14 @@
 		"test": "vitest run",
 		"docker:build": "docker compose -f .\\docker\\docker-compose.yml build",
 		"docker:run": "docker compose -f .\\docker\\docker-compose.yml up -d",
-		"docker:down": "docker compose -f .\\docker\\docker-compose.yml down && docker volume rm app_bdj_data",
-		"docker:restart": "docker compose -f .\\docker\\docker-compose.yml down && docker compose -f .\\docker\\docker-compose.yml up -d",
+		"docker:down": "docker compose -f .\\docker\\docker-compose.yml down -v",
+		"docker:restart": "docker compose -f .\\docker\\docker-compose.yml down -v && docker compose -f .\\docker\\docker-compose.yml up -d",
 		"docker:bash": "docker compose -f .\\docker\\docker-compose.yml exec db bash",
-		"docker:psql": "docker compose -f .\\docker\\docker-compose.yml exec db psql -U user -d app_bdj"
+		"docker:psql": "docker compose -f .\\docker\\docker-compose.yml exec db psql -U user -d app_bdj",
+		"docker:logs": "docker compose -f .\\docker\\docker-compose.yml logs"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"packageManager": "pnpm@10.23.0"
+	"packageManager": "pnpm@10.28.0"
 }

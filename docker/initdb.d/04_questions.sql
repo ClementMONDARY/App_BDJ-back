@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS questions (
     message VARCHAR(250) NOT NULL,
     answer TEXT,
     status question_status DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
 INSERT INTO questions (id, user_id, message, answer, status, created_at) VALUES

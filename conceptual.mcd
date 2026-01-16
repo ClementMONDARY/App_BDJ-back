@@ -17,7 +17,7 @@ NOTIFICATION: type, title, content, is_read, created_at, resource_data
 :
 
 BELONGS_TO_CONV, 11 MESSAGE, 0N CONVERSATION
-MESSAGE: content, attachment_url, created_at
+MESSAGE: content, attachment_urls, created_at
 SENDS, 11 MESSAGE, 0N USER
 USER: username, avatar, role, firstname, lastname, bio
 :
@@ -26,7 +26,7 @@ WRITES, 11 POST, 0N USER
 :
 
 :
-CONVERSATION: type, title, updated_at
+CONVERSATION: title, updated_at
 PARTICIPATES, 0N USER, 0N CONVERSATION: joined_at, last_read_msg_id
 REGISTERS, 0N USER, 0N EVENT: registered_at, status
 STARTS, 11 TOPIC, 0N USER
@@ -38,16 +38,7 @@ REPLIES_TO, 01 POST, 0N POST
 :
 ORGANIZES, 11 EVENT, 0N USER
 EVENT: title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees
-VOTES, 0N USER, 0N TOPIC: vote_type
-TOPIC: title, cover_image, view_count, like_count, msg_count, created_at
+LIKES_TOPIC, 0N USER, 0N TOPIC
+TOPIC: author_id, title, content, cover_image, attachment_urls, view_count, like_count, msg_count, created_at
 BELONGS_TO_TOPIC, 11 POST, 0N TOPIC
-POST: content, published_at, edited_at
-
-:
-:
-:
-:
-CATEGORY: name, slug
-CONTAINS, 0N CATEGORY, 11 TOPIC
-:
-:
+POST: author_id, content, published_at, edited_at
