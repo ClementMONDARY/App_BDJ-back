@@ -39,7 +39,8 @@
 		"docker:down": "docker compose -f .\\docker\\docker-compose.yml down -v",
 		"docker:restart": "docker compose -f .\\docker\\docker-compose.yml down -v && docker compose -f .\\docker\\docker-compose.yml up -d",
 		"docker:bash": "docker compose -f .\\docker\\docker-compose.yml exec db bash",
-		"docker:psql": "docker compose -f .\\docker\\docker-compose.yml exec db psql -U user -d app_bdj"
+		"docker:psql": "docker compose -f .\\docker\\docker-compose.yml exec db psql -U user -d app_bdj",
+		"docker:logs": "docker compose -f .\\docker\\docker-compose.yml logs"
 	},
 	"keywords": [],
 	"author": "",

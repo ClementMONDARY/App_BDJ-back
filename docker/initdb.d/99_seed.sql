@@ -34,11 +34,11 @@ INSERT INTO posts (id, topic_id, author_id, content) VALUES
 
 -- 4. Events (Utilisation de l'ID de Bob b000...0002 comme organisateur)
 INSERT INTO events (id, organizer_id, title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees) VALUES
-('a0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'Launch Party', 'Join us!', 'https://picsum.photos/seed/event1/800/400', NOW() + interval '7 days', NOW() + interval '7 days 4 hours', 'Main Hall', 0, 100, 2);
+('a0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'Launch Party', 'Join us!', 'https://picsum.photos/seed/event1/800/400', NOW() + interval '7 days', NOW() + interval '7 days 4 hours', 'Main Hall', 4.95, 100, 1);
 
+-- Alice is registered to the event
 INSERT INTO event_registrations (event_id, user_id, status) VALUES
-('a0000000-0000-4000-a000-000000000001', 'a0000000-0000-4000-a000-000000000001', 'registered'),
-('a0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002', 'registered');
+('a0000000-0000-4000-a000-000000000001', 'a0000000-0000-4000-a000-000000000001', 'registered');
 
 -- 5. Notifications
 INSERT INTO notifications (id, user_id, type, title, content, is_read, resource_data) VALUES

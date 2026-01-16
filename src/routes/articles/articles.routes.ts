@@ -28,7 +28,6 @@ export default async function articlesRoutes(app: FastifyInstance) {
                 ORDER BY created_at DESC
             `;
 
-			console.log("ARTICLES DATA:", JSON.stringify(articles, null, 2));
 			return reply.send(articles);
 		},
 	);
@@ -122,7 +121,6 @@ export default async function articlesRoutes(app: FastifyInstance) {
 				await sql`SELECT author_id FROM articles WHERE id = ${id}`;
 			if (!existing)
 				return reply.status(404).send({ message: "Article not found" });
-			// TODO: Allow admin to edit? For now only author.
 			if (existing.author_id !== userId)
 				return reply
 					.status(403)
