@@ -50,3 +50,30 @@ export async function createNotification({
         VALUES (${userId}, ${type}, ${title}, ${content}, ${db.json(resourceData as any)})
     `;
 }
+
+interface NotifyAllParams {
+	type: string;
+	title: string;
+	content: string;
+	resourceData?: object;
+	excludeUserId?: string;
+	sqlTransaction?: typeof sql;
+}
+
+export async function notifyAllUsers({
+	type,
+	title,
+	content,
+	resourceData = {},
+	excludeUserId,
+	sqlTransaction,
+}: NotifyAllParams) {
+	const db = sqlTransaction || sql;
+
+	await db`
+        INSERT INTO notifications (user_id, type, title, content, resource_data)
+        SELECT id, ${type}, ${title}, ${content}, ${db.json(resourceData as any)}
+        FROM users
+        WHERE id != ${excludeUserId || "00000000-0000-0000-0000-000000000000"}
+    `;
+}
