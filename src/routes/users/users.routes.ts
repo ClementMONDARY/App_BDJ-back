@@ -6,13 +6,16 @@ import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate, hashPassword } from "../../plugins/auth.js";
 import {
-	type PublicProfile,
 	ZPublicProfile,
 	ZUpdateUser,
+	ZUserList,
 	ZUserProfileParams,
+	type PublicProfile,
+	type UserPreview,
 } from "./schema/users.schema.js";
 
 export default async function usersRoutes(app: FastifyInstance) {
+	// Get User
 	app.withTypeProvider<ZodTypeProvider>().get(
 		"/:id",
 		{
@@ -28,7 +31,7 @@ export default async function usersRoutes(app: FastifyInstance) {
 			const { id } = request.params;
 
 			const [user] = await sql<PublicProfile[]>`
-                SELECT id, username, avatar, bio, role,created_at
+                SELECT id, username, avatar, bio, role, follower_count, following_count, created_at
                 FROM users
                 WHERE id = ${id}
             `;
@@ -41,6 +44,7 @@ export default async function usersRoutes(app: FastifyInstance) {
 		},
 	);
 
+	// Update User
 	app.withTypeProvider<ZodTypeProvider>().put(
 		"/:id",
 		{
@@ -92,11 +96,11 @@ export default async function usersRoutes(app: FastifyInstance) {
                             UPDATE users
                             SET ${sql(userFields)}
                             WHERE id = ${id}
-                            RETURNING id, username, avatar, bio, role, created_at
+                            RETURNING id, username, avatar, bio, role, follower_count, following_count, created_at
                         `;
 					} else {
 						[user] = await sql<PublicProfile[]>`
-                            SELECT id, username, avatar, bio, role, created_at
+                            SELECT id, username, avatar, bio, role, follower_count, following_count, created_at
                             FROM users
                             WHERE id = ${id}
                         `;
@@ -123,6 +127,7 @@ export default async function usersRoutes(app: FastifyInstance) {
 		},
 	);
 
+	// Delete User
 	app.withTypeProvider<ZodTypeProvider>().delete(
 		"/:id",
 		{
@@ -168,10 +173,16 @@ export default async function usersRoutes(app: FastifyInstance) {
 	);
 
 	// Upload Avatar
-	app.post(
+	app.withTypeProvider<ZodTypeProvider>().post(
 		"/me/avatar",
 		{
 			preHandler: [authenticate],
+			schema: {
+				response: {
+					200: z.object({ message: z.string() }),
+					400: z.object({ message: z.string() }),
+				},
+			},
 		},
 		async (request, reply) => {
 			const data = await request.file();
@@ -221,7 +232,179 @@ export default async function usersRoutes(app: FastifyInstance) {
 				}
 			}
 
-			return reply.send({ avatar: avatarUrl });
+			return reply
+				.status(200)
+				.send({ message: "Avatar uploaded successfully" });
+		},
+	);
+
+	// Follow User
+	app.withTypeProvider<ZodTypeProvider>().post(
+		"/:id/follow",
+		{
+			preHandler: [authenticate],
+			schema: {
+				params: ZUserProfileParams,
+				response: {
+					200: z.object({ message: z.string() }),
+					400: z.object({ message: z.string() }),
+					404: z.object({ message: z.string() }),
+					409: z.object({ message: z.string() }),
+				},
+			},
+		},
+		async (request, reply) => {
+			const { id: targetId } = request.params;
+			const actorId = request.user.id;
+
+			if (actorId === targetId) {
+				return reply
+					.status(400)
+					.send({ message: "You cannot follow yourself" });
+			}
+
+			try {
+				await sql.begin(async (sql) => {
+					// Check if target user exists
+					const [target] =
+						await sql`SELECT 1 FROM users WHERE id = ${targetId}`;
+					if (!target) {
+						throw new Error("User not found");
+					}
+
+					// Insert follow
+					await sql`
+                        INSERT INTO user_follows (follower_id, following_id)
+                        VALUES (${actorId}, ${targetId})
+                    `;
+
+					// Update counts
+					await sql`
+                        UPDATE users SET following_count = following_count + 1 WHERE id = ${actorId}
+                    `;
+					await sql`
+                        UPDATE users SET follower_count = follower_count + 1 WHERE id = ${targetId}
+                    `;
+				});
+
+				return reply.send({ message: "Followed successfully" });
+			} catch (err: unknown) {
+				if (err instanceof Error && err.message === "User not found") {
+					return reply.status(404).send({ message: "User not found" });
+				}
+				if (typeof err === "object" && err !== null && "code" in err) {
+					if (err.code === "23505") {
+						return reply.status(409).send({ message: "Already following" });
+					}
+				}
+				throw err;
+			}
+		},
+	);
+
+	// Unfollow User
+	app.withTypeProvider<ZodTypeProvider>().delete(
+		"/:id/follow",
+		{
+			preHandler: [authenticate],
+			schema: {
+				params: ZUserProfileParams,
+				response: {
+					200: z.object({ message: z.string() }),
+					400: z.object({ message: z.string() }),
+					404: z.object({ message: z.string() }),
+				},
+			},
+		},
+		async (request, reply) => {
+			const { id: targetId } = request.params;
+			const actorId = request.user.id;
+
+			if (actorId === targetId) {
+				return reply
+					.status(400)
+					.send({ message: "You cannot unfollow yourself" });
+			}
+
+			try {
+				await sql.begin(async (sql) => {
+					// Delete follow
+					const [deleted] = await sql`
+                        DELETE FROM user_follows 
+                        WHERE follower_id = ${actorId} AND following_id = ${targetId}
+                        RETURNING *
+                    `;
+
+					if (!deleted) {
+						throw new Error("Not following");
+					}
+
+					// Update counts
+					await sql`
+                        UPDATE users SET following_count = following_count - 1 WHERE id = ${actorId}
+                    `;
+					await sql`
+                        UPDATE users SET follower_count = follower_count - 1 WHERE id = ${targetId}
+                    `;
+				});
+
+				return reply.send({ message: "Unfollowed successfully" });
+			} catch (err: unknown) {
+				if (err instanceof Error && err.message === "Not following") {
+					return reply.status(404).send({ message: "Not following" });
+				}
+				throw err;
+			}
+		},
+	);
+
+	// Get Followers
+	app.withTypeProvider<ZodTypeProvider>().get(
+		"/:id/followers",
+		{
+			schema: {
+				params: ZUserProfileParams,
+				response: {
+					200: ZUserList,
+				},
+			},
+		},
+		async (request, reply) => {
+			const { id } = request.params;
+
+			const followers = await sql<UserPreview[]>`
+                SELECT u.id, u.username, u.avatar
+                FROM user_follows uf
+                JOIN users u ON u.id = uf.follower_id
+                WHERE uf.following_id = ${id}
+            `;
+
+			return reply.send(followers);
+		},
+	);
+
+	// Get Following
+	app.withTypeProvider<ZodTypeProvider>().get(
+		"/:id/following",
+		{
+			schema: {
+				params: ZUserProfileParams,
+				response: {
+					200: ZUserList,
+				},
+			},
+		},
+		async (request, reply) => {
+			const { id } = request.params;
+
+			const following = await sql<UserPreview[]>`
+                SELECT u.id, u.username, u.avatar
+                FROM user_follows uf
+                JOIN users u ON u.id = uf.following_id
+                WHERE uf.follower_id = ${id}
+            `;
+
+			return reply.send(following);
 		},
 	);
 }

@@ -10,7 +10,17 @@ CREATE TABLE IF NOT EXISTS users (
     avatar TEXT,
     bio TEXT,
     role user_role DEFAULT 'user',
+    follower_count INT DEFAULT 0,
+    following_count INT DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS user_follows (
+    follower_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    following_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    PRIMARY KEY (follower_id, following_id),
+    CHECK (follower_id != following_id)
 );
 
 CREATE TABLE IF NOT EXISTS user_auth (
@@ -18,11 +28,8 @@ CREATE TABLE IF NOT EXISTS user_auth (
     email TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL
 );
-INSERT INTO users (id, username, firstname, lastname, avatar, bio, role, created_at) VALUES
-('ea9016f3-26b1-407e-8b66-9ee860b55c50', 'testuser', 'Test', 'User', 'https://avatar.iran.liara.run/public?username=testuser', NULL, 'admin', '2025-12-12T14:58:29.680Z'::TIMESTAMPTZ);
-
-INSERT INTO user_auth (user_id, email, password_hash) VALUES
-('ea9016f3-26b1-407e-8b66-9ee860b55c50', 'test@example.com', '$argon2id$v=19$m=65536,t=3,p=4$J09SdGH1kvRtUbW+Z8omSw$2MFFtucDvfp1b8thEaBgu6FGHgqEK84LEiPZYrS2MmI');
 
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_user_auth_email ON user_auth(email);
+CREATE INDEX IF NOT EXISTS idx_user_follows_follower ON user_follows(follower_id);
+CREATE INDEX IF NOT EXISTS idx_user_follows_following ON user_follows(following_id);

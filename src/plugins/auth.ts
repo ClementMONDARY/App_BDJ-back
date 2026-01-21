@@ -1,5 +1,5 @@
 import * as argon2 from "argon2";
-import { createHash, randomBytes } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import * as jose from "jose";
 import sql from "../db/db.js";
@@ -32,6 +32,7 @@ export const verifyPassword = async (
 	plain: string,
 ): Promise<boolean> => {
 	try {
+		console.log(argon2.verify(hash, plain));
 		return await argon2.verify(hash, plain);
 	} catch (_err) {
 		return false;
@@ -50,12 +51,11 @@ export const createAccessToken = async (
 
 export const createRefreshToken = async (userId: string): Promise<string> => {
 	const token = randomBytes(32).toString("hex");
-	const hash = createHash("sha256").update(token).digest("hex");
 	const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000); // 14 days
 
 	await sql`
-    INSERT INTO refresh_tokens (user_id, token_hash, expires_at)
-    VALUES (${userId}, ${hash}, ${expiresAt})
+    INSERT INTO refresh_tokens (user_id, token, expires_at)
+    VALUES (${userId}, ${token}, ${expiresAt})
   `;
 
 	return token;
@@ -75,12 +75,10 @@ export const verifyAccessToken = async (
 export const verifyRefreshToken = async (
 	token: string,
 ): Promise<string | null> => {
-	const hash = createHash("sha256").update(token).digest("hex");
-
 	const [data] = await sql`
     SELECT user_id 
     FROM refresh_tokens 
-    WHERE token_hash = ${hash} 
+    WHERE token = ${token} 
     AND expires_at > NOW()
   `;
 
@@ -89,8 +87,7 @@ export const verifyRefreshToken = async (
 };
 
 export const revokeRefreshToken = async (token: string): Promise<void> => {
-	const hash = createHash("sha256").update(token).digest("hex");
-	await sql`DELETE FROM refresh_tokens WHERE token_hash = ${hash}`;
+	await sql`DELETE FROM refresh_tokens WHERE token = ${token}`;
 };
 
 export const authenticate = async (

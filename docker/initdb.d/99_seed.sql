@@ -3,14 +3,20 @@
 -- --------------------------------------------------------------------------------
 
 -- 1. Create extra users (Alice & Bob)
-INSERT INTO users (id, username, firstname, lastname, avatar, bio, role) VALUES
-('a0000000-0000-4000-a000-000000000001', 'alice', 'Alice', 'Wonderland', 'https://avatar.iran.liara.run/public/girl?username=alice', 'Love tech and tea.', 'user'),
-('b0000000-0000-4000-a000-000000000002', 'bob', 'Bob', 'Builder', 'https://avatar.iran.liara.run/public/boy?username=bob', 'Can we fix it?', 'admin')
+INSERT INTO users (id, username, firstname, lastname, avatar, bio, follower_count, following_count, role) VALUES
+('a0000000-0000-4000-a000-000000000001', 'alice', 'Alice', 'Wonderland', 'https://avatar.iran.liara.run/public/girl?username=alice', 'Love tech and tea.', 1, 1, 'user'),
+('b0000000-0000-4000-a000-000000000002', 'bob', 'Bob', 'Builder', 'https://avatar.iran.liara.run/public/boy?username=bob', 'Can we fix it?', 1, 1, 'admin')
 ON CONFLICT (id) DO NOTHING;
 
+-- 1.1 Follows
+-- ALice and Bob follow each others
+INSERT INTO user_follows (follower_id, following_id) VALUES
+('a0000000-0000-4000-a000-000000000001', 'b0000000-0000-4000-a000-000000000002'),
+('b0000000-0000-4000-a000-000000000002', 'a0000000-0000-4000-a000-000000000001');
+
 INSERT INTO user_auth (user_id, email, password_hash) VALUES
-('a0000000-0000-4000-a000-000000000001', 'alice@example.com', '$argon2id$v=19$m=65536,t=3,p=4$WwPzThqQfwandadzmpr9+g$ELX+ePYqTiRtCvHATQhSTTnXtPdbwHMZAv6pqMcgbI0'), -- password123
-('b0000000-0000-4000-a000-000000000002', 'bob@example.com', '$argon2id$v=19$m=65536,t=3,p=4$WwPzThqQfwandadzmpr9+g$ELX+ePYqTiRtCvHATQhSTTnXtPdbwHMZAv6pqMcgbI0') -- password123
+('a0000000-0000-4000-a000-000000000001', 'alice@example.com', '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk'), -- password123
+('b0000000-0000-4000-a000-000000000002', 'bob@example.com', '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk') -- password123
 ON CONFLICT (user_id) DO NOTHING;
 
 -- 2. Articles
@@ -62,3 +68,8 @@ INSERT INTO suggestions (id, user_id, title, content, upvotes, downvotes) VALUES
 
 INSERT INTO suggestion_votes (id, suggestion_id, user_id, type) VALUES
 ('a0000000-0000-4000-a000-000000000001', 'e0000000-0000-4000-a000-000000000001', 'a0000000-0000-4000-a000-000000000001', 'up');
+
+-- 8. Questions
+INSERT INTO questions (id, user_id, message, answer, status, created_at) VALUES
+('f029d7ba-9fba-4954-8e0d-1482e7c6b471', 'b0000000-0000-4000-a000-000000000002', 'Rorem ipsum dolor sit amet, consectetur adipiscing elit ?', 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.\n\nUt commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl. Curabitur tempus urna at turpis condimentum lobortis.', 'answered', '2025-12-12 14:35:51.371'),
+('ff18da8b-bad1-4648-96c0-d1ea62bd0ffa', 'a0000000-0000-4000-a000-000000000001', 'A secret santa among all classes', NULL, 'pending', '2025-12-12 14:37:44.654');

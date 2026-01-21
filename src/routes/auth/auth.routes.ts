@@ -3,7 +3,6 @@ import path from "node:path";
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import sql from "../../db/db.js";
-import type { UserRow } from "../../models/user.model";
 import {
 	authenticate,
 	createAccessToken,
@@ -22,6 +21,7 @@ import {
 	tokenResponseSchema,
 	userResponseSchema,
 } from "./schema/auth.schema.js";
+import type { UserResponse } from "../users/schema/users.schema.js";
 
 export default async function authRoutes(app: FastifyInstance) {
 	// Signup
@@ -86,7 +86,7 @@ export default async function authRoutes(app: FastifyInstance) {
 
 			// Transactional insert
 			const newUser = await sql.begin(async (sql) => {
-				const [user] = await sql<UserRow[]>`
+				const [user] = await sql<UserResponse[]>`
         INSERT INTO users (username, firstname, lastname, avatar)
         VALUES (${username}, ${firstname || null}, ${lastname || null}, ${avatarUrl})
         RETURNING *
