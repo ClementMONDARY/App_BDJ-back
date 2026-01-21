@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+export const ZUserResponse = z.object({
+	id: z.string(),
+	username: z.string(),
+	firstname: z.string().nullable(),
+	lastname: z.string().nullable(),
+	role: z.string(),
+	created_at: z.date(),
+});
+
 export const ZPublicProfile = z.object({
 	id: z.uuid(),
 	username: z.string(),
@@ -23,3 +32,4 @@ export const ZUpdateUser = z.object({
 });
 
 export type PublicProfile = z.infer<typeof ZPublicProfile>;
+export type UserResponse = z.infer<typeof ZUserResponse>;
