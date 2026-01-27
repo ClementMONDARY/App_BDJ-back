@@ -1,4 +1,4 @@
-:
+REFRESH_TOKENS: user_id, token, expires_at
 :
 :
 ARTICLE: title, slug, content, cover_image, view_count, like_count, created_at
@@ -7,7 +7,7 @@ ARTICLE: title, slug, content, cover_image, view_count, like_count, created_at
 :
 :
 
-:
+IDENTIFIES, 11 REFRESH_TOKENS, 01 USER_AUTH
 USER_AUTH: email, password_hash
 SECURES, 01 USER_AUTH, 11 USER
 PUBLISHES, 11 ARTICLE, 0N USER

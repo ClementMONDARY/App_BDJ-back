@@ -23,7 +23,6 @@ declare module "fastify" {
 }
 
 export const hashPassword = async (password: string): Promise<string> => {
-	console.log(argon2.hash(password));
 	return await argon2.hash(password);
 };
 
@@ -32,7 +31,6 @@ export const verifyPassword = async (
 	plain: string,
 ): Promise<boolean> => {
 	try {
-		console.log(argon2.verify(hash, plain));
 		return await argon2.verify(hash, plain);
 	} catch (_err) {
 		return false;
