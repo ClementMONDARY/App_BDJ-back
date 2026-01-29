@@ -11,7 +11,7 @@ import {
 	type Event,
 	type Registration,
 } from "./schema/events.schema.js";
-import { notifyAllUsers } from "../../services/notifications.service.js";
+import { createNotification, notifyAllUsers } from "../../services/notifications.service.js";
 
 export default async function eventsRoutes(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(
@@ -134,6 +134,14 @@ export default async function eventsRoutes(app: FastifyInstance) {
                  `;
 
 				await sql`UPDATE events SET current_attendees = current_attendees + 1 WHERE id = ${id}`;
+				createNotification({
+					userId,
+					type: "event",
+					title: `Event: ${event.title}`,
+					content: `You have been registered for the event "${event.title}".`,
+					resourceData: { event_id: event.id },
+					sqlTransaction: sql,
+				});
 
 				return reg;
 			});
