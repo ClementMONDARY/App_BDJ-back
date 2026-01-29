@@ -9,6 +9,7 @@ import {
 	createRefreshToken,
 	hashPassword,
 	revokeRefreshToken,
+	revokeAllUserSessions,
 	verifyPassword,
 	verifyRefreshToken,
 } from "../../plugins/auth.js";
@@ -209,6 +210,27 @@ export default async function authRoutes(app: FastifyInstance) {
 			const { refreshToken } = request.body;
 			await revokeRefreshToken(refreshToken);
 			return reply.send({ message: "Logged out successfully" });
+		},
+	);
+
+	// Revoke All Sessions (Protected)
+	app.withTypeProvider<ZodTypeProvider>().post(
+		"/revoke-all-sessions",
+		{
+			schema: {
+				response: {
+					200: messageResponseSchema,
+					401: messageResponseSchema,
+				},
+			},
+			preHandler: [authenticate],
+		},
+		async (request, reply) => {
+			if (!request.user) {
+				return reply.status(401).send({ message: "Unauthorized" });
+			}
+			await revokeAllUserSessions(request.user.id);
+			return reply.send({ message: "All sessions revoked successfully" });
 		},
 	);
 
