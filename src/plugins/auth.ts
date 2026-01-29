@@ -88,6 +88,10 @@ export const revokeRefreshToken = async (token: string): Promise<void> => {
 	await sql`DELETE FROM refresh_tokens WHERE token = ${token}`;
 };
 
+export const revokeAllUserSessions = async (userId: string): Promise<void> => {
+	await sql`DELETE FROM refresh_tokens WHERE user_id = ${userId}`;
+};
+
 export const authenticate = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
