@@ -43,7 +43,7 @@ export const createAccessToken = async (
 	return await new jose.SignJWT({ ...payload })
 		.setProtectedHeader({ alg: "HS256" })
 		.setIssuedAt()
-		.setExpirationTime("15m")
+		.setExpirationTime("5m") // 5 minutes
 		.sign(JWT_SECRET);
 };
 

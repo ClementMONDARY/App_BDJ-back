@@ -14,6 +14,7 @@ Detailed documentation of all available API endpoints for the **App-BDJ-Back** p
 | `POST` | `/auth/login` | Public | Login to receive Access & Refresh tokens. |
 | `POST` | `/auth/refresh` | Public | Refresh an expired Access token using a Refresh token. |
 | `POST` | `/auth/logout` | Public | Invalidate a Refresh token (logout). |
+| `POST` | `/auth/revoke-all-sessions` | User | Revoke ALL sessions (Refresh Tokens) for the user. |
 | `GET` | `/auth/me` | User | Get the currently logged-in user's private profile. |
 
 ---
