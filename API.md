@@ -1,6 +1,6 @@
 # API Documentation 📡
 
-Detailed documentation of all available API endpoints for the **App-BDJ-Back** project.
+Detailed documentation of all available API endpoints and their corresponding schemas for the **App-BDJ-Back** project.
 
 **Base URL**: `http://localhost:3000` (default)
 **Authentication**: Most endpoints require a Bearer Token via `Authorization` header.
