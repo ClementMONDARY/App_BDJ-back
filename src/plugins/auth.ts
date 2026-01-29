@@ -43,7 +43,7 @@ export const createAccessToken = async (
 	return await new jose.SignJWT({ ...payload })
 		.setProtectedHeader({ alg: "HS256" })
 		.setIssuedAt()
-		.setExpirationTime("15m")
+		.setExpirationTime("5m") // 5 minutes
 		.sign(JWT_SECRET);
 };
 
@@ -86,6 +86,10 @@ export const verifyRefreshToken = async (
 
 export const revokeRefreshToken = async (token: string): Promise<void> => {
 	await sql`DELETE FROM refresh_tokens WHERE token = ${token}`;
+};
+
+export const revokeAllUserSessions = async (userId: string): Promise<void> => {
+	await sql`DELETE FROM refresh_tokens WHERE user_id = ${userId}`;
 };
 
 export const authenticate = async (
