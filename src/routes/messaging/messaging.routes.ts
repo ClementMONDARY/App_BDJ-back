@@ -3,17 +3,17 @@ import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate } from "../../plugins/auth.js";
+import { createNotification } from "../../services/notifications.service.js";
 import {
+	type Conversation,
+	type Message,
 	ZConversation,
 	ZConversationList,
 	ZMessage,
 	ZMessageList,
 	ZNewConversation,
 	ZNewMessage,
-	type Conversation,
-	type Message,
 } from "./schema/messaging.schema.js";
-import { createNotification } from "../../services/notifications.service.js";
 
 export default async function messagingRoutes(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(

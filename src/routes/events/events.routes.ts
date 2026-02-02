@@ -4,17 +4,17 @@ import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate, requireRole } from "../../plugins/auth.js";
 import {
+	createNotification,
+	notifyAllUsers,
+} from "../../services/notifications.service.js";
+import {
+	type Event,
+	type Registration,
 	ZEvent,
 	ZEventList,
 	ZNewEvent,
 	ZRegistration,
-	type Event,
-	type Registration,
 } from "./schema/events.schema.js";
-import {
-	createNotification,
-	notifyAllUsers,
-} from "../../services/notifications.service.js";
 
 export default async function eventsRoutes(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(

@@ -3,14 +3,14 @@ import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate, requireRole } from "../../plugins/auth.js";
+import { createNotification } from "../../services/notifications.service.js";
 import {
+	type Article,
 	ZArticle,
 	ZArticleList,
 	ZNewArticle,
 	ZUpdateArticle,
-	type Article,
 } from "./schema/articles.schema.js";
-import { createNotification } from "../../services/notifications.service.js";
 
 export default async function articlesRoutes(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(

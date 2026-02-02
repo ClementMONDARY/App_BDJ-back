@@ -4,21 +4,21 @@ import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate } from "../../plugins/auth.js";
 import {
-	ZTopic,
-	ZTopicList,
-	ZPost,
-	ZPostList,
-	ZNewTopic,
-	ZNewPost,
-	ZToggleLikeResponse,
-	ZToggleFollowResponse,
-	type Topic,
-	type Post,
-} from "./schema/forum.schema.js";
-import {
 	createNotification,
 	notifyAllUsers,
 } from "../../services/notifications.service.js";
+import {
+	type Post,
+	type Topic,
+	ZNewPost,
+	ZNewTopic,
+	ZPost,
+	ZPostList,
+	ZToggleFollowResponse,
+	ZToggleLikeResponse,
+	ZTopic,
+	ZTopicList,
+} from "./schema/forum.schema.js";
 
 export default async function forumRoutes(app: FastifyInstance) {
 	// Topics

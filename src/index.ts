@@ -3,12 +3,12 @@ import cors from "@fastify/cors";
 import fastifyMultipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
 import "dotenv/config";
+import path from "node:path";
 import Fastify from "fastify";
 import {
 	serializerCompiler,
 	validatorCompiler,
 } from "fastify-type-provider-zod";
-import path from "node:path";
 import articlesRoutes from "./routes/articles/articles.routes.js";
 import authRoutes from "./routes/auth/auth.routes.js";
 import eventsRoutes from "./routes/events/events.routes.js";

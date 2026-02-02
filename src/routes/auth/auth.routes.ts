@@ -8,11 +8,12 @@ import {
 	createAccessToken,
 	createRefreshToken,
 	hashPassword,
-	revokeRefreshToken,
 	revokeAllUserSessions,
+	revokeRefreshToken,
 	verifyPassword,
 	verifyRefreshToken,
 } from "../../plugins/auth.js";
+import type { UserResponse } from "../users/schema/users.schema.js";
 import {
 	loginSchema,
 	logoutSchema,
@@ -22,7 +23,6 @@ import {
 	tokenResponseSchema,
 	userResponseSchema,
 } from "./schema/auth.schema.js";
-import type { UserResponse } from "../users/schema/users.schema.js";
 
 export default async function authRoutes(app: FastifyInstance) {
 	// Signup

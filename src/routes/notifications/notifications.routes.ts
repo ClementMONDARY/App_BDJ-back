@@ -4,9 +4,9 @@ import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate } from "../../plugins/auth.js";
 import {
+	type Notification,
 	ZNotification,
 	ZNotificationList,
-	type Notification,
 } from "./schema/notifications.schema.js";
 
 export default async function notificationsRoutes(app: FastifyInstance) {

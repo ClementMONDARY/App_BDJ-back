@@ -1,5 +1,5 @@
-import * as argon2 from "argon2";
 import { randomBytes } from "node:crypto";
+import * as argon2 from "argon2";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import * as jose from "jose";
 import sql from "../db/db.js";

@@ -7,17 +7,17 @@ import {
 	requireRole,
 	verifyAccessToken,
 } from "../../plugins/auth.js";
+import { createNotification } from "../../services/notifications.service.js";
 import {
 	type Suggestion,
-	ZSuggestion,
 	ZListSuggestions,
+	ZNewSuggestion,
 	ZPartialSuggestion,
+	ZSuggestion,
+	ZSuggestionList,
 	ZUserNewSuggestion,
 	ZVoteSuggestionResponse,
-	ZNewSuggestion,
-	ZSuggestionList,
 } from "./schema/suggestions.schema.js";
-import { createNotification } from "../../services/notifications.service.js";
 
 export default async function suggestionsRoutes(app: FastifyInstance) {
 	// --------------------------------------------
@@ -188,7 +188,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 		},
 		async (request, reply) => {
 			const authHeader = request.headers.authorization;
-			let userId: string | null = null;
+			let userId: number | null = null;
 
 			if (authHeader?.startsWith("Bearer ")) {
 				const token = authHeader.split(" ")[1];

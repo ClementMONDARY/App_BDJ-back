@@ -4,14 +4,14 @@ import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate, requireRole } from "../../plugins/auth.js";
 import {
-	type Question,
 	type PublicQuestion,
-	ZQuestion,
+	type Question,
 	ZListQuestions,
-	ZPartialQuestion,
-	ZUserNewQuestion,
-	ZPublicQuestionList,
 	ZNewQuestion,
+	ZPartialQuestion,
+	ZPublicQuestionList,
+	ZQuestion,
+	ZUserNewQuestion,
 } from "./schema/questions.schema.js";
 
 export default async function questionsRoutes(app: FastifyInstance) {

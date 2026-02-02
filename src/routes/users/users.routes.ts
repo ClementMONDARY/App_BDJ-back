@@ -1,17 +1,17 @@
-import type { FastifyInstance } from "fastify";
-import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import fs from "node:fs/promises";
 import path from "node:path";
+import type { FastifyInstance } from "fastify";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate, hashPassword } from "../../plugins/auth.js";
 import {
+	type PublicProfile,
+	type UserPreview,
 	ZPublicProfile,
 	ZUpdateUser,
 	ZUserList,
 	ZUserProfileParams,
-	type PublicProfile,
-	type UserPreview,
 } from "./schema/users.schema.js";
 
 export default async function usersRoutes(app: FastifyInstance) {
