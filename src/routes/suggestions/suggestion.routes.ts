@@ -76,7 +76,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 			preHandler: [authenticate, requireRole(["admin"])],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: ZSuggestion,
@@ -99,7 +99,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 			preHandler: [authenticate, requireRole(["admin"])],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				body: ZPartialSuggestion,
 				response: {
@@ -126,7 +126,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 			preHandler: [authenticate, requireRole(["admin"])],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: z.object({
@@ -223,7 +223,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 			preHandler: [authenticate],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				body: z.object({
 					type: z.enum(["up", "down"]),

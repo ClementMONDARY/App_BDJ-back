@@ -97,7 +97,7 @@ export default async function messagingRoutes(app: FastifyInstance) {
 		{
 			preHandler: [authenticate],
 			schema: {
-				params: z.object({ id: z.uuid() }),
+				params: z.object({ id: z.coerce.number().int() }),
 				response: {
 					200: ZMessageList,
 					403: z.object({}),
@@ -126,7 +126,7 @@ export default async function messagingRoutes(app: FastifyInstance) {
 		{
 			preHandler: [authenticate],
 			schema: {
-				params: z.object({ id: z.uuid() }),
+				params: z.object({ id: z.coerce.number().int() }),
 				body: ZNewMessage,
 				response: {
 					201: ZMessage,

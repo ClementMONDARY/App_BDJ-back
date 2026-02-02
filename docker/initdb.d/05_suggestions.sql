@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS suggestions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE SET NULL,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     upvotes INT DEFAULT 0,
@@ -9,9 +9,9 @@ CREATE TABLE IF NOT EXISTS suggestions (
 );
 
 CREATE TABLE IF NOT EXISTS suggestion_votes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    suggestion_id UUID REFERENCES suggestions(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    suggestion_id INT REFERENCES suggestions(id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
     type VARCHAR(10) CHECK (type IN ('up', 'down')),
     UNIQUE (suggestion_id, user_id)
 );

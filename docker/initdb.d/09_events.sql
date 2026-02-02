@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS events (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    organizer_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    organizer_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     cover_image TEXT,
@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TYPE registration_status AS ENUM ('registered', 'cancelled', 'waitlist');
 
 CREATE TABLE IF NOT EXISTS event_registrations (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    event_id INT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     status registration_status DEFAULT 'registered',
     registered_at TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE(event_id, user_id)

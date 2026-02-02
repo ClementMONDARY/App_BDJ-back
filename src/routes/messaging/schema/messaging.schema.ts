@@ -1,23 +1,23 @@
 import { z } from "zod";
 
 export const ZConversation = z.object({
-	id: z.uuid(),
+	id: z.number().int(),
 	title: z.string().nullable(),
 	created_at: z.date(),
 	updated_at: z.date(),
 });
 
 export const ZMessage = z.object({
-	id: z.uuid(),
-	conversation_id: z.uuid(),
-	sender_id: z.uuid(),
+	id: z.number().int(),
+	conversation_id: z.number().int(),
+	sender_id: z.number().int(),
 	content: z.string(),
 	attachment_urls: z.array(z.string()).nullable(),
 	created_at: z.date(),
 });
 
 export const ZNewConversation = z.object({
-	participant_ids: z.array(z.uuid()),
+	participant_ids: z.array(z.number().int()),
 	title: z.string().optional(),
 });
 

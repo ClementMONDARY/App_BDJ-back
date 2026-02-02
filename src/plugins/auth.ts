@@ -11,7 +11,7 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 console.log(JWT_SECRET);
 
 export interface UserPayload {
-	id: string;
+	id: number;
 	username: string;
 	role: string;
 }
@@ -47,7 +47,7 @@ export const createAccessToken = async (
 		.sign(JWT_SECRET);
 };
 
-export const createRefreshToken = async (userId: string): Promise<string> => {
+export const createRefreshToken = async (userId: number): Promise<string> => {
 	const token = randomBytes(32).toString("hex");
 	const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000); // 14 days
 
@@ -72,7 +72,7 @@ export const verifyAccessToken = async (
 
 export const verifyRefreshToken = async (
 	token: string,
-): Promise<string | null> => {
+): Promise<number | null> => {
 	const [data] = await sql`
     SELECT user_id 
     FROM refresh_tokens 
@@ -88,7 +88,7 @@ export const revokeRefreshToken = async (token: string): Promise<void> => {
 	await sql`DELETE FROM refresh_tokens WHERE token = ${token}`;
 };
 
-export const revokeAllUserSessions = async (userId: string): Promise<void> => {
+export const revokeAllUserSessions = async (userId: number): Promise<void> => {
 	await sql`DELETE FROM refresh_tokens WHERE user_id = ${userId}`;
 };
 

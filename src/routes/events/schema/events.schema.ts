@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const ZEvent = z.object({
-	id: z.uuid(),
-	organizer_id: z.uuid(),
+	id: z.number().int(),
+	organizer_id: z.number().int(),
 	title: z.string(),
 	description: z.string(),
 	cover_image: z.string().nullable(),
@@ -20,9 +20,9 @@ export const ZEvent = z.object({
 });
 
 export const ZRegistration = z.object({
-	id: z.uuid(),
-	event_id: z.uuid(),
-	user_id: z.uuid(),
+	id: z.number().int(),
+	event_id: z.number().int(),
+	user_id: z.number().int(),
 	status: z.enum(["registered", "cancelled", "waitlist"]),
 	registered_at: z.date(),
 });

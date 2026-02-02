@@ -3,8 +3,8 @@ import { z } from "zod";
 export const ZStatus = z.enum(["pending", "answered", "rejected"]);
 
 export const ZQuestion = z.object({
-	id: z.uuid(),
-	user_id: z.uuid(),
+	id: z.number().int(),
+	user_id: z.number().int(),
 	message: z.string().max(250),
 	answer: z.string().nullable(),
 	status: ZStatus.default("pending"),

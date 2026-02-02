@@ -3,8 +3,8 @@ import { z } from "zod";
 // CRUD schema
 // --------------------------------------------
 export const ZSuggestion = z.object({
-	id: z.uuid(),
-	user_id: z.uuid(),
+	id: z.number().int(),
+	user_id: z.number().int(),
 	title: z.string().max(255),
 	content: z.string().max(1000),
 	upvotes: z.number().default(0),

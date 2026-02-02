@@ -11,7 +11,10 @@ import {
 	type Event,
 	type Registration,
 } from "./schema/events.schema.js";
-import { createNotification, notifyAllUsers } from "../../services/notifications.service.js";
+import {
+	createNotification,
+	notifyAllUsers,
+} from "../../services/notifications.service.js";
 
 export default async function eventsRoutes(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(
@@ -36,7 +39,7 @@ export default async function eventsRoutes(app: FastifyInstance) {
 		"/:id",
 		{
 			schema: {
-				params: z.object({ id: z.uuid() }),
+				params: z.object({ id: z.coerce.number().int() }),
 				response: {
 					200: ZEvent,
 					404: z.null(),

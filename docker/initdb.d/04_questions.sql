@@ -1,8 +1,8 @@
 CREATE TYPE question_status AS ENUM ('pending', 'answered', 'rejected');
 
 CREATE TABLE IF NOT EXISTS questions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
     message VARCHAR(250) NOT NULL,
     answer TEXT,
     status question_status DEFAULT 'pending',

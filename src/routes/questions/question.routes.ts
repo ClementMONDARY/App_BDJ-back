@@ -71,7 +71,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
 			preHandler: [authenticate, requireRole(["admin"])],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: ZQuestion,
@@ -94,7 +94,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
 			preHandler: [authenticate, requireRole(["admin"])],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				body: ZPartialQuestion,
 				response: {
@@ -121,7 +121,7 @@ export default async function questionsRoutes(app: FastifyInstance) {
 			preHandler: [authenticate, requireRole(["admin"])],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: z.object({

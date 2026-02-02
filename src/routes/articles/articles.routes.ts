@@ -98,7 +98,7 @@ export default async function articlesRoutes(app: FastifyInstance) {
 			preHandler: [authenticate],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				body: ZUpdateArticle,
 				response: {
@@ -143,7 +143,7 @@ export default async function articlesRoutes(app: FastifyInstance) {
 			preHandler: [authenticate],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: z.object({
@@ -185,7 +185,7 @@ export default async function articlesRoutes(app: FastifyInstance) {
 			preHandler: [authenticate],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: z.object({ like_count: z.number() }),

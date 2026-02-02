@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const ZTopic = z.object({
-	id: z.uuid(),
-	author_id: z.uuid().nullable(),
+	id: z.number().int(),
+	author_id: z.number().int().nullable(),
 	title: z.string(),
 	content: z.string().nullable(),
 	cover_image: z.string().nullable(),
@@ -15,11 +15,11 @@ export const ZTopic = z.object({
 });
 
 export const ZPost = z.object({
-	id: z.uuid(),
-	topic_id: z.uuid(),
-	author_id: z.uuid().nullable(),
+	id: z.number().int(),
+	topic_id: z.number().int(),
+	author_id: z.number().int().nullable(),
 	content: z.string(),
-	parent_id: z.uuid().nullable(),
+	parent_id: z.number().int().nullable(),
 	created_at: z.date(),
 	updated_at: z.date(),
 });
@@ -34,7 +34,7 @@ export const ZNewTopic = z.object({
 
 export const ZNewPost = z.object({
 	content: z.string().min(1),
-	parent_id: z.uuid().optional(),
+	parent_id: z.number().int().optional(),
 });
 
 // Lists

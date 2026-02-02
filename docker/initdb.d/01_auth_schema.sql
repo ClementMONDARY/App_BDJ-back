@@ -1,9 +1,8 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TYPE user_role AS ENUM ('user', 'admin', 'moderator');
 
 CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     firstname TEXT,
     lastname TEXT,
@@ -16,15 +15,15 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS user_follows (
-    follower_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    following_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    follower_id INT REFERENCES users(id) ON DELETE CASCADE,
+    following_id INT REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     PRIMARY KEY (follower_id, following_id),
     CHECK (follower_id != following_id)
 );
 
 CREATE TABLE IF NOT EXISTS user_auth (
-    user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    user_id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
     email TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL
 );

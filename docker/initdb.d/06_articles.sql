@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS articles (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    author_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    author_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     cover_image TEXT,
@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS articles (
 );
 
 CREATE TABLE IF NOT EXISTS article_likes (
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    article_id UUID REFERENCES articles(id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    article_id INT REFERENCES articles(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     PRIMARY KEY (user_id, article_id)
 );

@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const ZArticle = z.object({
-	id: z.uuid(),
-	author_id: z.uuid(),
+	id: z.number().int(),
+	author_id: z.number().int(),
 	title: z.string().min(1),
 	content: z.string().min(1),
 	cover_image: z.string().nullable(),

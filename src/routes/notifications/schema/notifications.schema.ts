@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const ZNotification = z.object({
-	id: z.uuid(),
-	user_id: z.uuid(),
+	id: z.number().int(),
+	user_id: z.number().int(),
 	type: z.string(),
 	title: z.string(),
 	content: z.string(),

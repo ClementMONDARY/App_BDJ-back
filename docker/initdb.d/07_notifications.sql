@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS notifications (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
-  user_id UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   type TEXT NOT NULL, -- e.g., 'system', 'reply', 'like', 'event_reminder'
   title TEXT NOT NULL,
   content TEXT NOT NULL,

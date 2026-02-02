@@ -45,7 +45,7 @@ export default async function forumRoutes(app: FastifyInstance) {
 		{
 			schema: {
 				params: z.object({
-					id: z.string(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: ZTopic,
@@ -111,7 +111,7 @@ export default async function forumRoutes(app: FastifyInstance) {
 		{
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: ZPostList,
@@ -133,7 +133,7 @@ export default async function forumRoutes(app: FastifyInstance) {
 			preHandler: [authenticate],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				body: ZNewPost,
 				response: {

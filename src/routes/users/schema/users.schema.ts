@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ZUserResponse = z.object({
-	id: z.string(),
+	id: z.number().int(),
 	username: z.string(),
 	firstname: z.string().nullable(),
 	lastname: z.string().nullable(),
@@ -10,7 +10,7 @@ export const ZUserResponse = z.object({
 });
 
 export const ZPublicProfile = z.object({
-	id: z.uuid(),
+	id: z.number().int(),
 	username: z.string(),
 	avatar: z.string().nullable(),
 	bio: z.string().nullable(),
@@ -21,7 +21,7 @@ export const ZPublicProfile = z.object({
 });
 
 export const ZUserProfileParams = z.object({
-	id: z.uuid(),
+	id: z.coerce.number().int(),
 });
 
 export const ZUpdateUser = z.object({
@@ -34,7 +34,7 @@ export const ZUpdateUser = z.object({
 });
 
 export const ZUserPreview = z.object({
-	id: z.uuid(),
+	id: z.number().int(),
 	username: z.string(),
 	avatar: z.string().nullable(),
 });

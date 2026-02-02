@@ -1,7 +1,7 @@
 import sql from "../db/db.js";
 
 interface CreateNotificationParams {
-	userId: string;
+	userId: number;
 	type: string;
 	title: string;
 	content: string;
@@ -56,7 +56,7 @@ interface NotifyAllParams {
 	title: string;
 	content: string;
 	resourceData?: object;
-	excludeUserId?: string;
+	excludeUserId?: number;
 	sqlTransaction?: typeof sql;
 }
 
@@ -74,6 +74,6 @@ export async function notifyAllUsers({
         INSERT INTO notifications (user_id, type, title, content, resource_data)
         SELECT id, ${type}, ${title}, ${content}, ${db.json(resourceData as any)}
         FROM users
-        WHERE id != ${excludeUserId || "00000000-0000-0000-0000-000000000000"}
+        WHERE id != ${excludeUserId || 0}
     `;
 }

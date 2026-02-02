@@ -14,7 +14,7 @@ export const loginSchema = z.object({
 });
 
 export const userResponseSchema = z.object({
-	id: z.uuid(),
+	id: z.number().int(),
 	username: z.string(),
 	email: z.email(),
 	role: z.string(),
