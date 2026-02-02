@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"dependencies": {
 		"@fastify/cookie": "^11.0.2",
+		"@fastify/cors": "^11.2.0",
 		"@fastify/multipart": "^9.3.0",
 		"@fastify/static": "^9.0.0",
 		"argon2": "^0.44.0",
@@ -34,13 +35,13 @@
 		"format": "biome format --write",
 		"autofix": "biome check --write",
 		"test": "vitest run",
-		"docker:build": "docker compose -f .\\docker\\docker-compose.yml build",
-		"docker:run": "docker compose -f .\\docker\\docker-compose.yml up -d",
-		"docker:down": "docker compose -f .\\docker\\docker-compose.yml down -v",
-		"docker:restart": "docker compose -f .\\docker\\docker-compose.yml down -v && docker compose -f .\\docker\\docker-compose.yml up -d",
-		"docker:bash": "docker compose -f .\\docker\\docker-compose.yml exec db bash",
-		"docker:psql": "docker compose -f .\\docker\\docker-compose.yml exec db psql -U user -d app_bdj",
-		"docker:logs": "docker compose -f .\\docker\\docker-compose.yml logs"
+		"docker:build": "docker compose --env-file .env -f .\\docker\\docker-compose.yml build",
+		"docker:run": "docker compose --env-file .env -f .\\docker\\docker-compose.yml up -d",
+		"docker:down": "docker compose --env-file .env -f .\\docker\\docker-compose.yml down -v",
+		"docker:restart": "docker compose --env-file .env -f .\\docker\\docker-compose.yml down -v && docker compose --env-file .env -f .\\docker\\docker-compose.yml up -d",
+		"docker:bash": "docker compose --env-file .env -f .\\docker\\docker-compose.yml exec db bash",
+		"docker:psql": "docker compose --env-file .env -f .\\docker\\docker-compose.yml exec db sh -c \"psql -U $POSTGRES_USER -d $POSTGRES_DB\"",
+		"docker:logs": "docker compose --env-file .env -f .\\docker\\docker-compose.yml logs"
 	},
 	"keywords": [],
 	"author": "",
