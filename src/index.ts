@@ -1,27 +1,34 @@
 import cookie from "@fastify/cookie";
-import "dotenv/config";
-import Fastify from "fastify";
+import cors from "@fastify/cors";
 import fastifyMultipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
-import path from "node:path";
+import "dotenv/config";
+import Fastify from "fastify";
 import {
 	serializerCompiler,
 	validatorCompiler,
 } from "fastify-type-provider-zod";
+import path from "node:path";
+import articlesRoutes from "./routes/articles/articles.routes.js";
 import authRoutes from "./routes/auth/auth.routes.js";
+import eventsRoutes from "./routes/events/events.routes.js";
+import forumRoutes from "./routes/forum/forum.routes.js";
+import messagingRoutes from "./routes/messaging/messaging.routes.js";
+import notificationsRoutes from "./routes/notifications/notifications.routes.js";
 import questionsRoutes from "./routes/questions/question.routes.js";
 import suggestionsRoutes from "./routes/suggestions/suggestion.routes.js";
 import usersRoutes from "./routes/users/users.routes.js";
-import articlesRoutes from "./routes/articles/articles.routes.js";
-import notificationsRoutes from "./routes/notifications/notifications.routes.js";
-import forumRoutes from "./routes/forum/forum.routes.js";
-import eventsRoutes from "./routes/events/events.routes.js";
-import messagingRoutes from "./routes/messaging/messaging.routes.js";
 
 process.loadEnvFile();
 
 const app = Fastify({
 	logger: true,
+});
+
+app.register(cors, {
+	origin: "*",
+	credentials: true,
+	methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 });
 
 app.setValidatorCompiler(validatorCompiler);

@@ -29,7 +29,5 @@ CREATE TABLE IF NOT EXISTS user_auth (
     password_hash TEXT NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
-CREATE INDEX IF NOT EXISTS idx_user_auth_email ON user_auth(email);
 CREATE INDEX IF NOT EXISTS idx_user_follows_follower ON user_follows(follower_id);
 CREATE INDEX IF NOT EXISTS idx_user_follows_following ON user_follows(following_id);
