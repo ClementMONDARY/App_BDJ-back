@@ -190,7 +190,7 @@ export default async function forumRoutes(app: FastifyInstance) {
 		{
 			preHandler: [authenticate],
 			schema: {
-				params: z.object({ id: z.uuid() }),
+				params: z.object({ id: z.coerce.number().int() }),
 				response: {
 					200: ZToggleLikeResponse,
 				},
@@ -256,7 +256,7 @@ export default async function forumRoutes(app: FastifyInstance) {
 		{
 			preHandler: [authenticate],
 			schema: {
-				params: z.object({ id: z.uuid() }),
+				params: z.object({ id: z.coerce.number().int() }),
 				response: {
 					200: ZToggleFollowResponse,
 				},

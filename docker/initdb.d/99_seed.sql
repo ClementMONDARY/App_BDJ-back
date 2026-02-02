@@ -60,7 +60,7 @@ INSERT INTO conversation_participants (conversation_id, user_id) VALUES
 -- Conversation messages
 INSERT INTO messages (conversation_id, sender_id, content) VALUES
 (1, 1, 'Hey Admin, found a bug!'),
-(2, 2, 'Thanks Alice, please report it.');
+(1, 2, 'Thanks Alice, please report it.');
 
 -- 7. Suggestions (IDs alignés)
 INSERT INTO suggestions (id, user_id, title, content, upvotes, downvotes) VALUES
@@ -74,3 +74,17 @@ INSERT INTO questions (id, user_id, message, answer, status, created_at) VALUES
 (1, 2, 'Rorem ipsum dolor sit amet, consectetur adipiscing elit ?', 'Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.\n\nUt commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl. Curabitur tempus urna at turpis condimentum lobortis.', 'answered', '2025-12-12 14:35:51.371'),
 (2, 1, 'A secret santa among all classes', NULL, 'pending', '2025-12-12 14:37:44.654');
 
+
+-- --------------------------------------------------------------------------------
+-- 9. RESET SEQUENCES
+-- --------------------------------------------------------------------------------
+ALTER SEQUENCE users_id_seq RESTART WITH 3;
+ALTER SEQUENCE articles_id_seq RESTART WITH 2;
+ALTER SEQUENCE topics_id_seq RESTART WITH 2;
+ALTER SEQUENCE posts_id_seq RESTART WITH 4;
+ALTER SEQUENCE events_id_seq RESTART WITH 2;
+ALTER SEQUENCE notifications_id_seq RESTART WITH 2;
+ALTER SEQUENCE conversations_id_seq RESTART WITH 2;
+ALTER SEQUENCE suggestions_id_seq RESTART WITH 2;
+ALTER SEQUENCE suggestion_votes_id_seq RESTART WITH 2;
+ALTER SEQUENCE questions_id_seq RESTART WITH 3;

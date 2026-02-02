@@ -104,7 +104,7 @@ export default async function eventsRoutes(app: FastifyInstance) {
 			preHandler: [authenticate],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: ZRegistration,
@@ -159,7 +159,7 @@ export default async function eventsRoutes(app: FastifyInstance) {
 			preHandler: [authenticate],
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: z.object({

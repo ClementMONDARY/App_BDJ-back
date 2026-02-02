@@ -37,7 +37,7 @@ export default async function articlesRoutes(app: FastifyInstance) {
 		{
 			schema: {
 				params: z.object({
-					id: z.uuid(),
+					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: ZArticle,

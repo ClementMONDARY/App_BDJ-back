@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS topics (
     id SERIAL PRIMARY KEY,
-    author_id INT NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+    author_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     content TEXT,
     cover_image TEXT,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS topics (
 CREATE TABLE IF NOT EXISTS posts (
     id SERIAL PRIMARY KEY,
     topic_id INT NOT NULL REFERENCES topics(id) ON DELETE CASCADE,
-    author_id INT NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+    author_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     parent_id INT REFERENCES posts(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
