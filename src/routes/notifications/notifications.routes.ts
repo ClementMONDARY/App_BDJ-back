@@ -3,11 +3,7 @@ import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import sql from "../../db/db.js";
 import { authenticate } from "../../plugins/auth.js";
-import {
-	type Notification,
-	ZNotification,
-	ZNotificationList,
-} from "./schema/notifications.schema.js";
+import { Notification, ZNotificationList } from "./schema/notifications.schema.js";
 
 export default async function notificationsRoutes(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(
@@ -40,7 +36,7 @@ export default async function notificationsRoutes(app: FastifyInstance) {
 					id: z.coerce.number().int(),
 				}),
 				response: {
-					200: ZNotification,
+					204: z.null(),
 					404: z.object({
 						message: z.string(),
 					}),
@@ -51,18 +47,17 @@ export default async function notificationsRoutes(app: FastifyInstance) {
 			const { id } = request.params;
 			const userId = request.user.id;
 
-			const [notification] = await sql<Notification[]>`
+			const result = await sql`
                 UPDATE notifications
                 SET is_read = TRUE
                 WHERE id = ${id} AND user_id = ${userId}
-                RETURNING *
             `;
 
-			if (!notification) {
+			if (result.count === 0) {
 				return reply.status(404).send({ message: "Notification not found" });
 			}
 
-			return reply.send(notification);
+			return reply.status(204).send();
 		},
 	);
 
