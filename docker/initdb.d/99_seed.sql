@@ -45,7 +45,7 @@ INSERT INTO event_registrations (event_id, user_id, status) VALUES
 
 -- 5. Notifications
 INSERT INTO notifications (id, user_id, type, title, content, is_read, resource_data) VALUES
-(1, 2, 'forum', 'New topic: Hello World', 'Alice created a new topic named "Hello World", are you interested?', FALSE, '{"topic_id": 1}');
+(1, 2, 'forum', 'Forum • New topic: Hello World', 'Alice created a new topic named "Hello World", are you interested?', FALSE, '{"topic_id": 1}');
 
 -- 6. Messaging
 -- Conversation entre Alice et Bob
