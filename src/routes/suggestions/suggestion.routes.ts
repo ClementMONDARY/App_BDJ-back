@@ -298,8 +298,8 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 				if (type === "up" && updatedSuggestion.user_id !== request.user.id) {
 					await createNotification({
 						userId: updatedSuggestion.user_id,
-						type: "like",
-						title: `Someone liked "${updatedSuggestion.title}"`,
+						type: "suggestion",
+						title: `Suggestion • New like on "${updatedSuggestion.title}"`,
 						content: `${request.user.username} liked your suggestion.`,
 						resourceData: { suggestion_id: id },
 						sqlTransaction: sql,

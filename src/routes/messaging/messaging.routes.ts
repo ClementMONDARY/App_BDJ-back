@@ -73,7 +73,7 @@ export default async function messagingRoutes(app: FastifyInstance) {
 					await createNotification({
 						userId: pid,
 						type: "messaging",
-						title: "Added to conversation",
+						title: "Conversation • Added to conversation",
 						content: `${request.user.username} added you to a conversation "${conv.title}"`,
 						resourceData: { conversation_id: conv.id },
 					});
@@ -167,7 +167,7 @@ export default async function messagingRoutes(app: FastifyInstance) {
 					await createNotification({
 						userId: p.user_id,
 						type: "messaging",
-						title: `New message in "${conv?.title || "Conversation"}"`,
+						title: `Conversation • New message in "${conv?.title || "Conversation"}"`,
 						content: `${request.user.username}: ${content}`,
 						resourceData: { conversation_id: id, message_id: msg.id },
 						sqlTransaction: sql,

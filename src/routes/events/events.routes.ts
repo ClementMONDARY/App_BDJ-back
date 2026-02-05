@@ -140,8 +140,8 @@ export default async function eventsRoutes(app: FastifyInstance) {
 				createNotification({
 					userId,
 					type: "event",
-					title: `Event: ${event.title}`,
-					content: `You have been registered for the event "${event.title}".`,
+					title: `Évenement • Inscription à ${event.title}`,
+					content: `Vous avez été inscrit à l'événement "${event.title}".`,
 					resourceData: { event_id: event.id },
 					sqlTransaction: sql,
 				});

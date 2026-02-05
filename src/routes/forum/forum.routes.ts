@@ -169,7 +169,7 @@ export default async function forumRoutes(app: FastifyInstance) {
 						await createNotification({
 							userId: parentPost.author_id,
 							type: "forum",
-							title: "New reply to your post",
+							title: "Forum • New reply to your post",
 							content: `${request.user.username} replied to your post in "${topic?.title}": ${content}`,
 							resourceData: { topic_id: id, post_id: newPost.id },
 							sqlTransaction: sql,
@@ -235,7 +235,7 @@ export default async function forumRoutes(app: FastifyInstance) {
 					await createNotification({
 						userId: updatedTopic.author_id,
 						type: "forum",
-						title: `New like on "${updatedTopic.title}"`,
+						title: `Forum • New like on "${updatedTopic.title}"`,
 						content: `${request.user.username} liked your topic.`,
 						resourceData: { topic_id: id },
 						sqlTransaction: sql,
