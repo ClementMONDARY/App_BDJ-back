@@ -110,5 +110,5 @@ Detailed documentation of all available API endpoints and their corresponding sc
 | Method | Endpoint | Access | Description | Input DTO | Output DTO |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/notifications/` | User | List recent notifications. | - | [ZNotificationList](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/notifications/schema/notifications.schema.ts#L14) |
-| `PATCH` | `/notifications/:id/read` | User | Mark a notification as read. | - | [ZNotification](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/notifications/schema/notifications.schema.ts#L3) |
+| `PATCH` | `/notifications/:id/read` | User | Mark a notification as read. | - | - |
 | `DELETE` | `/notifications/:id` | User | Delete a notification. | - | [messageResponseSchema](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/auth/schema/auth.schema.ts#L29) |
