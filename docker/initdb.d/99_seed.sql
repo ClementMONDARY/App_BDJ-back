@@ -45,7 +45,9 @@ INSERT INTO event_registrations (event_id, user_id, status) VALUES
 
 -- 5. Notifications
 INSERT INTO notifications (id, user_id, type, title, content, is_read, resource_data) VALUES
-(1, 2, 'forum', 'Forum • New topic: Hello World', 'Alice created a new topic named "Hello World", are you interested?', FALSE, '{"topic_id": 1}');
+(1, 2, 'forum', 'Forum • New topic: Hello World', 'Alice created a new topic named "Hello World", are you interested?', FALSE, '{"topic_id": 1}'),
+(2, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}');
+
 
 -- 6. Messaging
 -- Conversation entre Alice et Bob
@@ -83,7 +85,7 @@ ALTER SEQUENCE articles_id_seq RESTART WITH 2;
 ALTER SEQUENCE topics_id_seq RESTART WITH 2;
 ALTER SEQUENCE posts_id_seq RESTART WITH 4;
 ALTER SEQUENCE events_id_seq RESTART WITH 2;
-ALTER SEQUENCE notifications_id_seq RESTART WITH 2;
+ALTER SEQUENCE notifications_id_seq RESTART WITH 3;
 ALTER SEQUENCE conversations_id_seq RESTART WITH 2;
 ALTER SEQUENCE suggestions_id_seq RESTART WITH 2;
 ALTER SEQUENCE suggestion_votes_id_seq RESTART WITH 2;
