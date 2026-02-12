@@ -46,7 +46,26 @@ INSERT INTO event_registrations (event_id, user_id, status) VALUES
 -- 5. Notifications
 INSERT INTO notifications (id, user_id, type, title, content, is_read, resource_data) VALUES
 (1, 2, 'forum', 'Forum • New topic: Hello World', 'Alice created a new topic named "Hello World", are you interested?', FALSE, '{"topic_id": 1}'),
-(2, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}');
+(2, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(3, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(4, 2, 'message', 'Alice • New message', 'Alice sent you a message.', FALSE, '{"conversation_id": 1}'),
+(5, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(6, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(7, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(8, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(9, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(10, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(11, 2, 'forum', 'Forum • New topic: Hello World', 'Alice created a new topic named "Hello World", are you interested?', FALSE, '{"topic_id": 1}'),
+(12, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(13, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(14, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(15, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(16, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(17, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(18, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(19, 2, 'article', 'Article • New like on "Welcome to the Platform"', 'Bob liked your article.', TRUE, '{"article_id": 1}'),
+(20, 2, 'event', 'Event • New registration on "Launch Party"', 'Bob registered to your event.', TRUE, '{"event_id": 1}');
+
 
 
 -- 6. Messaging
@@ -85,7 +104,7 @@ ALTER SEQUENCE articles_id_seq RESTART WITH 2;
 ALTER SEQUENCE topics_id_seq RESTART WITH 2;
 ALTER SEQUENCE posts_id_seq RESTART WITH 4;
 ALTER SEQUENCE events_id_seq RESTART WITH 2;
-ALTER SEQUENCE notifications_id_seq RESTART WITH 3;
+ALTER SEQUENCE notifications_id_seq RESTART WITH 21;
 ALTER SEQUENCE conversations_id_seq RESTART WITH 2;
 ALTER SEQUENCE suggestions_id_seq RESTART WITH 2;
 ALTER SEQUENCE suggestion_votes_id_seq RESTART WITH 2;

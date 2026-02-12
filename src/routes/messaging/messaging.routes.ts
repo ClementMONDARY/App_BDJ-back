@@ -166,7 +166,7 @@ export default async function messagingRoutes(app: FastifyInstance) {
 				for (const p of participants) {
 					await createNotification({
 						userId: p.user_id,
-						type: "messaging",
+						type: "message",
 						title: `Conversation • New message in "${conv?.title || "Conversation"}"`,
 						content: `${request.user.username}: ${content}`,
 						resourceData: { conversation_id: id, message_id: msg.id },
