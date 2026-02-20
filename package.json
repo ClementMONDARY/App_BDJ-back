@@ -35,7 +35,6 @@
 		"format": "biome format --write",
 		"autofix": "biome check --write",
 		"test": "vitest run",
-		"docker:build": "docker compose --env-file .env -f .\\docker\\docker-compose.yml build",
 		"docker:run": "docker compose --env-file .env -f .\\docker\\docker-compose.yml up -d",
 		"docker:down": "docker compose --env-file .env -f .\\docker\\docker-compose.yml down -v",
 		"docker:restart": "docker compose --env-file .env -f .\\docker\\docker-compose.yml down -v && docker compose --env-file .env -f .\\docker\\docker-compose.yml up -d",
