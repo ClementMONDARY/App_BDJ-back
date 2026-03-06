@@ -15,9 +15,9 @@ import {
 	ZPost,
 	ZPostList,
 	ZToggleFollowResponse,
-	ZToggleLikeResponse,
 	ZTopic,
 	ZTopicList,
+	ZTopicMessagersResponse,
 } from "./schema/forum.schema.js";
 
 export default async function forumRoutes(app: FastifyInstance) {
@@ -184,72 +184,6 @@ export default async function forumRoutes(app: FastifyInstance) {
 		},
 	);
 
-	// Like (Upvote Only) - Toggle
-	app.withTypeProvider<ZodTypeProvider>().post(
-		"/topics/:id/like",
-		{
-			preHandler: [authenticate],
-			schema: {
-				params: z.object({ id: z.coerce.number().int() }),
-				response: {
-					200: ZToggleLikeResponse,
-				},
-			},
-		},
-		async (request, reply) => {
-			const { id } = request.params;
-			const userId = request.user.id;
-
-			const result = await sql.begin(async (sql) => {
-				const [existingLike] = await sql`
-                    SELECT * FROM topic_likes WHERE topic_id = ${id} AND user_id = ${userId}
-                `;
-
-				let message = "";
-				let likeDelta = 0;
-
-				if (existingLike) {
-					// Unlike
-					await sql`DELETE FROM topic_likes WHERE topic_id = ${id} AND user_id = ${userId}`;
-					likeDelta = -1;
-					message = "Unliked";
-				} else {
-					// Like
-					await sql`INSERT INTO topic_likes (topic_id, user_id) VALUES (${id}, ${userId})`;
-					likeDelta = 1;
-					message = "Liked";
-				}
-
-				const [updatedTopic] = await sql<Topic[]>`
-                    UPDATE topics
-                    SET like_count = like_count + ${likeDelta}
-                    WHERE id = ${id}
-                    RETURNING like_count, author_id, title
-                `;
-
-				if (
-					likeDelta === 1 &&
-					updatedTopic.author_id !== null &&
-					updatedTopic.author_id !== userId
-				) {
-					await createNotification({
-						userId: updatedTopic.author_id,
-						type: "forum",
-						title: `Forum • New like on "${updatedTopic.title}"`,
-						content: `${request.user.username} liked your topic.`,
-						resourceData: { topic_id: id },
-						sqlTransaction: sql,
-						ensureUnique: true,
-					});
-				}
-
-				return { message, likes: updatedTopic.like_count };
-			});
-
-			return reply.send(result);
-		},
-	);
-
 	// Follow - Toggle
 	app.withTypeProvider<ZodTypeProvider>().post(
 		"/topics/:id/follow",
@@ -273,21 +207,62 @@ export default async function forumRoutes(app: FastifyInstance) {
 
 				let message = "";
 				let isFollowing = false;
+				let likeDelta = 0;
 
 				if (existingFollow) {
 					await sql`DELETE FROM topic_follows WHERE topic_id = ${id} AND user_id = ${userId}`;
 					message = "Unfollowed";
 					isFollowing = false;
+					likeDelta = -1;
 				} else {
 					await sql`INSERT INTO topic_follows (topic_id, user_id) VALUES (${id}, ${userId})`;
 					message = "Followed";
 					isFollowing = true;
+					likeDelta = 1;
 				}
 
-				return { message, is_following: isFollowing };
+				const [updatedTopic] = await sql<Topic[]>`
+                    UPDATE topics
+                    SET like_count = like_count + ${likeDelta}
+                    WHERE id = ${id}
+                    RETURNING like_count
+                `;
+				console.log(updatedTopic.like_count);
+
+				return {
+					message,
+					is_following: isFollowing,
+					likes: updatedTopic.like_count,
+				};
 			});
 
 			return reply.send(result);
+		},
+	);
+
+	// Topic Messagers
+	app.withTypeProvider<ZodTypeProvider>().get(
+		"/topics/:id/messagers",
+		{
+			schema: {
+				params: z.object({ id: z.coerce.number().int() }),
+				response: {
+					200: ZTopicMessagersResponse,
+				},
+			},
+		},
+		async (request, reply) => {
+			const { id } = request.params;
+
+			const messagers = await sql<{ author_id: number }[]>`
+				SELECT DISTINCT author_id 
+				FROM posts 
+				WHERE topic_id = ${id} AND author_id IS NOT NULL
+			`;
+
+			const users_ids = messagers.map((m) => m.author_id);
+
+			return reply.send({ users_ids });
 		},
 	);
 }

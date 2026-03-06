@@ -44,12 +44,12 @@ export const ZPostList = z.array(ZPost);
 export type Topic = z.infer<typeof ZTopic>;
 export type Post = z.infer<typeof ZPost>;
 
-export const ZToggleLikeResponse = z.object({
-	message: z.string(),
-	likes: z.number().int(),
-});
-
 export const ZToggleFollowResponse = z.object({
 	message: z.string(),
 	is_following: z.boolean(),
+	likes: z.number().int(),
+});
+
+export const ZTopicMessagersResponse = z.object({
+	users_ids: z.array(z.number().int()),
 });

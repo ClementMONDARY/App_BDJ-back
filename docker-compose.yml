@@ -18,10 +18,15 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
     env_file:
       - .env
     environment:
       - ${POSTGRES_HOST}
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     depends_on:
       - db
 
