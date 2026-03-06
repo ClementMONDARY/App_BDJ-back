@@ -78,7 +78,7 @@ Detailed documentation of all available API endpoints and their corresponding sc
 | `POST` | `/forum/topics/:id/follow` | User | Toggle following a topic for updates. | - | [ZToggleFollowResponse](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L47) |
 | `GET` | `/forum/topics/:id/posts` | Public | List replies/posts within a topic. | - | [ZPostList](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L42) |
 | `POST` | `/forum/topics/:id/posts` | User | Post a reply to a topic. | [ZNewPost](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L35) | [ZPost](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L17) |
-| `GET` | `/forum/topics/:id/messagers` | Public | List users who replied to a topic. | - | [ZTopicMessagersResponse](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L52) |
+| `GET` | `/forum/topics/:id/messagers` | Public | List users who replied to a topic. | - | [ZTopicMessagersResponse](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L53) |
 
 ---
 ## 💡 Suggestions
