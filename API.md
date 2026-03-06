@@ -75,10 +75,10 @@ Detailed documentation of all available API endpoints and their corresponding sc
 | `GET` | `/forum/topics` | Public | List all discussion topics. | - | [ZTopicList](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L41) |
 | `POST` | `/forum/topics` | User | Create a new discussion topic. | [ZNewTopic](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L28) | [ZTopic](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L3) |
 | `GET` | `/forum/topics/:id` | Public | Get a specific topic details. | - | [ZTopic](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L3) |
-| `POST` | `/forum/topics/:id/like` | User | Toggle like on a topic. | - | [ZToggleLikeResponse](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L47) |
-| `POST` | `/forum/topics/:id/follow` | User | Toggle following a topic for updates. | - | [ZToggleFollowResponse](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L52) |
+| `POST` | `/forum/topics/:id/follow` | User | Toggle following a topic for updates. | - | [ZToggleFollowResponse](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L47) |
 | `GET` | `/forum/topics/:id/posts` | Public | List replies/posts within a topic. | - | [ZPostList](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L42) |
 | `POST` | `/forum/topics/:id/posts` | User | Post a reply to a topic. | [ZNewPost](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L35) | [ZPost](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L17) |
+| `GET` | `/forum/topics/:id/messagers` | Public | List users who replied to a topic. | - | [ZTopicMessagersResponse](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/forum/schema/forum.schema.ts#L52) |
 
 ---
 ## 💡 Suggestions
