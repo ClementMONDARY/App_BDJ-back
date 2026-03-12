@@ -14,7 +14,6 @@ import {
 	ZNewTopic,
 	ZPost,
 	ZPostList,
-	ZToggleFollowResponse,
 	ZTopic,
 	ZTopicList,
 	ZTopicMessagersResponse,
@@ -192,7 +191,7 @@ export default async function forumRoutes(app: FastifyInstance) {
 			schema: {
 				params: z.object({ id: z.coerce.number().int() }),
 				response: {
-					200: ZToggleFollowResponse,
+					204: z.null(),
 				},
 			},
 		},
@@ -200,43 +199,27 @@ export default async function forumRoutes(app: FastifyInstance) {
 			const { id } = request.params;
 			const userId = request.user.id;
 
-			const result = await sql.begin(async (sql) => {
+			await sql.begin(async (sql) => {
 				const [existingFollow] = await sql`
                     SELECT * FROM topic_follows WHERE topic_id = ${id} AND user_id = ${userId}
                 `;
 
-				let message = "";
-				let isFollowing = false;
-				let likeDelta = 0;
+				const likeDelta = existingFollow ? -1 : 1;
 
 				if (existingFollow) {
 					await sql`DELETE FROM topic_follows WHERE topic_id = ${id} AND user_id = ${userId}`;
-					message = "Unfollowed";
-					isFollowing = false;
-					likeDelta = -1;
 				} else {
 					await sql`INSERT INTO topic_follows (topic_id, user_id) VALUES (${id}, ${userId})`;
-					message = "Followed";
-					isFollowing = true;
-					likeDelta = 1;
 				}
 
-				const [updatedTopic] = await sql<Topic[]>`
+				await sql`
                     UPDATE topics
                     SET like_count = like_count + ${likeDelta}
                     WHERE id = ${id}
-                    RETURNING like_count
                 `;
-				console.log(updatedTopic.like_count);
-
-				return {
-					message,
-					is_following: isFollowing,
-					likes: updatedTopic.like_count,
-				};
 			});
 
-			return reply.send(result);
+			return reply.status(204).send();
 		},
 	);
 
