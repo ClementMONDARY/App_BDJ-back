@@ -2,21 +2,31 @@
 -- 99_seed_data.sql
 -- --------------------------------------------------------------------------------
 
--- 1. Create extra users (Alice & Bob)
+-- 1. Create extra users (Alice, Bob + 5 nouveaux pour le forum)
 INSERT INTO users (id, username, firstname, lastname, avatar, bio, follower_count, following_count, role) VALUES
-(1, 'alice', 'Alice', 'Wonderland', 'https://avatar.iran.liara.run/public/girl?username=alice', 'Love tech and tea.', 1, 1, 'user'),
-(2, 'bob', 'Bob', 'Builder', 'https://avatar.iran.liara.run/public/boy?username=bob', 'Can we fix it?', 1, 1, 'admin')
+(1, 'alice',   'Alice',   'Wonderland', 'https://avatar.iran.liara.run/public/girl?username=alice',   'Love tech and tea.',          1, 1, 'user'),
+(2, 'bob',     'Bob',     'Builder',    'https://avatar.iran.liara.run/public/boy?username=bob',       'Can we fix it?',              1, 1, 'admin'),
+(3, 'charlie', 'Charlie', 'Chaplin',    'https://avatar.iran.liara.run/public/boy?username=charlie',   'Silent but efficient.',       0, 0, 'user'),
+(4, 'diana',   'Diana',   'Prince',     'https://avatar.iran.liara.run/public/girl?username=diana',   'Always on the move.',         0, 0, 'user'),
+(5, 'eve',     'Eve',     'Online',     'https://avatar.iran.liara.run/public/girl?username=eve',     'Security enthusiast.',        0, 0, 'user'),
+(6, 'frank',   'Frank',   'Sinatra',    'https://avatar.iran.liara.run/public/boy?username=frank',    'My way or the highway.',      0, 0, 'user'),
+(7, 'grace',   'Grace',   'Hopper',     'https://avatar.iran.liara.run/public/girl?username=grace',   'Found the first bug. Literally.', 0, 0, 'user')
 ON CONFLICT (id) DO NOTHING;
 
 -- 1.1 Follows
--- ALice and Bob follow each others
+-- Alice and Bob follow each other
 INSERT INTO user_follows (follower_id, following_id) VALUES
 (1, 2),
 (2, 1);
 
 INSERT INTO user_auth (user_id, email, password_hash) VALUES
-(1, 'alice@example.com', '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk'), -- password123
-(2, 'bob@example.com', '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk') -- password123
+(1, 'alice@example.com',   '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk'), -- password123
+(2, 'bob@example.com',     '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk'), -- password123
+(3, 'charlie@example.com', '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk'), -- password123
+(4, 'diana@example.com',   '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk'), -- password123
+(5, 'eve@example.com',     '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk'), -- password123
+(6, 'frank@example.com',   '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk'), -- password123
+(7, 'grace@example.com',   '$argon2id$v=19$m=65536,t=3,p=4$tlfAtlP7pM6rPJHFoH1MLg$7uE/6nPlOIZXxKKzNVFBZPJo44ucW3Z5LIIExJke0Mk')  -- password123
 ON CONFLICT (user_id) DO NOTHING;
 
 -- 2. Articles
@@ -27,13 +37,20 @@ INSERT INTO article_likes (user_id, article_id) VALUES
 (2, 1);
 
 -- 3. Forum (Topics & Posts, plus de categories)
-INSERT INTO topics (id, author_id, title, content, cover_image, attachment_urls, msg_count) VALUES
-(1, 1, 'Hello World', 'Just saying hello to everyone!', 'https://picsum.photos/seed/topic1/800/400', '{"https://picsum.photos/seed/topic1/600/200"}', 3);
+INSERT INTO topics (id, author_id, title, content, cover_image, attachment_urls, view_count, msg_count) VALUES
+(1, 1, 'Hello World', 'Just saying hello to everyone! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam facere sed consequatur consectetur fuga excepturi nesciunt eos earum voluptatem quidem, doloremque at odio, sapiente expedita quaerat delectus culpa velit reiciendis dolorum nobis debitis. Harum, mollitia eaque laudantium labore aliquam, nobis eius ipsam autem illum, in temporibus itaque? Atque consectetur et quo quasi consequatur ratione, iure repudiandae omnis aliquam explicabo dolor, autem ipsa sunt quas ullam quam quibusdam esse ex beatae dolores. Dolorum voluptatibus cumque voluptatem eos maxime repellendus, mollitia veniam doloremque nobis quod accusamus alias, a error ducimus, itaque quasi nisi tempora. Voluptas nihil, eveniet recusandae delectus at illo quis vero, esse consequuntur odit fugiat laborum harum. Dolores ab tempora architecto a sit odio totam praesentium tenetur debitis facilis sed, culpa quod, laborum nostrum doloremque nemo at cupiditate vero. Nobis corporis numquam omnis deleniti libero voluptatibus molestias quis ducimus velit tempora, laudantium sequi eligendi asperiores doloribus minus dolor temporibus voluptates, illo fugit autem sed aut, pariatur totam? Consequatur fugit necessitatibus eveniet? Voluptate, cum maiores nihil autem nesciunt aspernatur in ipsam, cupiditate modi facilis laboriosam repellendus dolore asperiores tenetur provident sunt. Quis ullam fugiat eos. Eveniet, beatae dolores ad rem sapiente voluptates, ullam maiores perferendis dolore ratione facere velit. Voluptatem sed suscipit vitae quia aliquid obcaecati, accusantium quidem inventore aspernatur, fugit odit consequatur odio. Saepe, reiciendis, assumenda eaque accusamus nesciunt debitis quos rerum sed distinctio consequuntur hic eum? Minima dignissimos tempore, nisi necessitatibus esse rem aperiam doloremque ullam. Odio voluptatem magni officiis aperiam voluptate, neque obcaecati pariatur accusantium quas. Nihil, dolor.', 'https://picsum.photos/seed/topic1/800/400', '{"https://picsum.photos/seed/topic1/600/200"}', 120, 10);
 
 INSERT INTO posts (id, topic_id, author_id, parent_id, content) VALUES
-(1, 1, 2, null, 'Just saying hello!'),
-(2, 1, 1, null, 'Hi Bob! Welcome!'),
-(3, 1, 2, 2, 'Your so kind Alice!');
+(1,  1, 2, null, 'Just saying hello!'),
+(2,  1, 1, null, 'Hi Bob! Welcome!'),
+(3,  1, 2, 2,    'You''re so kind Alice!'),
+(4,  1, 3, null, 'Great topic, love it!'),
+(5,  1, 4, 4,    'Totally agree with Charlie.'),
+(6,  1, 5, null, 'Has anyone checked the security implications here?'),
+(7,  1, 6, 6,    'Good point Eve, always think about security!'),
+(8,  1, 7, null, 'As Grace would say: if it works, ship it.'),
+(9,  1, 3, 8,    'Haha, classic Grace mindset!'),
+(10, 1, 4, 2,    'Alice, you always make everyone feel welcome!');
 
 -- 4. Events (Utilisation de l'ID de Bob 2 comme organisateur)
 INSERT INTO events (id, organizer_id, title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees) VALUES
@@ -99,10 +116,10 @@ INSERT INTO questions (id, user_id, message, answer, status, created_at) VALUES
 -- --------------------------------------------------------------------------------
 -- 9. RESET SEQUENCES
 -- --------------------------------------------------------------------------------
-ALTER SEQUENCE users_id_seq RESTART WITH 3;
+ALTER SEQUENCE users_id_seq RESTART WITH 8;
 ALTER SEQUENCE articles_id_seq RESTART WITH 2;
 ALTER SEQUENCE topics_id_seq RESTART WITH 2;
-ALTER SEQUENCE posts_id_seq RESTART WITH 4;
+ALTER SEQUENCE posts_id_seq RESTART WITH 11;
 ALTER SEQUENCE events_id_seq RESTART WITH 2;
 ALTER SEQUENCE notifications_id_seq RESTART WITH 21;
 ALTER SEQUENCE conversations_id_seq RESTART WITH 2;

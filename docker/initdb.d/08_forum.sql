@@ -22,13 +22,6 @@ CREATE TABLE IF NOT EXISTS posts (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS topic_likes (
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    topic_id INT REFERENCES topics(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    PRIMARY KEY (user_id, topic_id)
-);
-
 CREATE TABLE IF NOT EXISTS topic_follows (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     topic_id INT REFERENCES topics(id) ON DELETE CASCADE,

@@ -10,6 +10,7 @@ export const ZTopic = z.object({
 	view_count: z.number().int(),
 	like_count: z.number().int(),
 	msg_count: z.number().int(),
+	is_followed: z.boolean().optional(),
 	created_at: z.date(),
 	updated_at: z.date(),
 });

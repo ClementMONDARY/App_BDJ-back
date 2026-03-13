@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import sql from "../../db/db.js";
-import { authenticate } from "../../plugins/auth.js";
+import { authenticate, verifyAccessToken } from "../../plugins/auth.js";
 import {
 	createNotification,
 	notifyAllUsers,
@@ -30,11 +30,29 @@ export default async function forumRoutes(app: FastifyInstance) {
 				},
 			},
 		},
-		async (_request, reply) => {
+		async (request, reply) => {
+			// Authentification optionnelle : on tente de décoder le JWT sans bloquer
+			let userId: number | null = null;
+			const authHeader = request.headers.authorization;
+			if (authHeader?.startsWith("Bearer ")) {
+				const token = authHeader.split(" ")[1];
+				const user = await verifyAccessToken(token);
+				if (user) userId = user.id;
+			}
+
 			const topics = await sql<Topic[]>`
-                SELECT * FROM topics
-                ORDER BY created_at DESC
-            `;
+				SELECT
+					t.*,
+					${userId !== null
+						? sql`EXISTS(
+							SELECT 1 FROM topic_follows
+							WHERE topic_id = t.id AND user_id = ${userId}
+						)`
+						: sql`false`
+					} AS is_followed
+				FROM topics t
+				ORDER BY t.created_at DESC
+			`;
 			return reply.send(topics);
 		},
 	);
@@ -55,12 +73,31 @@ export default async function forumRoutes(app: FastifyInstance) {
 		async (request, reply) => {
 			const { id } = request.params;
 
+			// Authentification optionnelle
+			let userId: number | null = null;
+			const authHeader = request.headers.authorization;
+			if (authHeader?.startsWith("Bearer ")) {
+				const token = authHeader.split(" ")[1];
+				const user = await verifyAccessToken(token);
+				if (user) userId = user.id;
+			}
+
 			// Increment view count
 			await sql`UPDATE topics SET view_count = view_count + 1 WHERE id = ${id}`;
 
 			const [topic] = await sql<Topic[]>`
-                SELECT * FROM topics WHERE id = ${id}
-            `;
+				SELECT
+					t.*,
+					${userId !== null
+						? sql`EXISTS(
+							SELECT 1 FROM topic_follows
+							WHERE topic_id = t.id AND user_id = ${userId}
+						)`
+						: sql`false`
+					} AS is_followed
+				FROM topics t
+				WHERE t.id = ${id}
+			`;
 
 			if (!topic) return reply.status(404).send();
 			return reply.send(topic);
