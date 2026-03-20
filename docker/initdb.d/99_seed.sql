@@ -4,13 +4,13 @@
 
 -- 1. Create extra users (Alice, Bob + 5 nouveaux pour le forum)
 INSERT INTO users (id, username, firstname, lastname, avatar, bio, follower_count, following_count, role) VALUES
-(1, 'alice',   'Alice',   'Wonderland', 'https://avatar.iran.liara.run/public/girl?username=alice',   'Love tech and tea.',          1, 1, 'user'),
-(2, 'bob',     'Bob',     'Builder',    'https://avatar.iran.liara.run/public/boy?username=bob',       'Can we fix it?',              1, 1, 'admin'),
-(3, 'charlie', 'Charlie', 'Chaplin',    'https://avatar.iran.liara.run/public/boy?username=charlie',   'Silent but efficient.',       0, 0, 'user'),
-(4, 'diana',   'Diana',   'Prince',     'https://avatar.iran.liara.run/public/girl?username=diana',   'Always on the move.',         0, 0, 'user'),
-(5, 'eve',     'Eve',     'Online',     'https://avatar.iran.liara.run/public/girl?username=eve',     'Security enthusiast.',        0, 0, 'user'),
-(6, 'frank',   'Frank',   'Sinatra',    'https://avatar.iran.liara.run/public/boy?username=frank',    'My way or the highway.',      0, 0, 'user'),
-(7, 'grace',   'Grace',   'Hopper',     'https://avatar.iran.liara.run/public/girl?username=grace',   'Found the first bug. Literally.', 0, 0, 'user')
+(1, 'alice',   'Alice',   'Wonderland', '/assets/images/avatars/avatar_female_01.png',   'Love tech and tea.',          1, 1, 'user'),
+(2, 'bob',     'Bob',     'Builder',    '/assets/images/avatars/avatar_male_01.png',       'Can we fix it?',              1, 1, 'admin'),
+(3, 'charlie', 'Charlie', 'Chaplin',    '/assets/images/avatars/avatar_male_02.png',   'Silent but efficient.',       0, 0, 'user'),
+(4, 'diana',   'Diana',   'Prince',     '/assets/images/avatars/avatar_female_02.png',   'Always on the move.',         0, 0, 'user'),
+(5, 'eve',     'Eve',     'Online',     '/assets/images/avatars/avatar_female_03.png',     'Security enthusiast.',        0, 0, 'user'),
+(6, 'frank',   'Frank',   'Sinatra',    '/assets/images/avatars/avatar_male_03.png',    'My way or the highway.',      0, 0, 'user'),
+(7, 'grace',   'Grace',   'Hopper',     '/assets/images/avatars/avatar_female_00.png',   'Found the first bug. Literally.', 0, 0, 'user')
 ON CONFLICT (id) DO NOTHING;
 
 -- 1.1 Follows

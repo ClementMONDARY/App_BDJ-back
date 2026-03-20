@@ -1,8 +1,38 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyRequest } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
+
+const resolveAvatarUrl = (avatar: string | null, request: FastifyRequest) => {
+	if (!avatar) return null;
+	const baseUrl =
+		process.env.BASE_URL || `${request.protocol}://${request.hostname}`;
+
+	if (avatar.startsWith("/")) {
+		return `${baseUrl}${avatar}`;
+	}
+
+	if (avatar.includes("/uploads/avatars/")) {
+		try {
+			const url = new URL(avatar);
+			return `${baseUrl}${url.pathname}`;
+		} catch {
+			return `${baseUrl}${avatar.substring(avatar.indexOf("/uploads/avatars/"))}`;
+		}
+	}
+
+	if (avatar.includes("/assets/images/avatars/")) {
+		try {
+			const url = new URL(avatar);
+			return `${baseUrl}${url.pathname}`;
+		} catch {
+			return `${baseUrl}${avatar.substring(avatar.indexOf("/assets/images/avatars/"))}`;
+		}
+	}
+
+	return avatar;
+};
 import sql from "../../db/db.js";
 import { authenticate, hashPassword } from "../../plugins/auth.js";
 import {
@@ -40,7 +70,12 @@ export default async function usersRoutes(app: FastifyInstance) {
 				return reply.status(404).send();
 			}
 
-			return reply.send(user);
+			const userWithAvatar = {
+				...user,
+				avatar: resolveAvatarUrl(user.avatar, request),
+			};
+
+			return reply.send(userWithAvatar);
 		},
 	);
 
@@ -210,9 +245,7 @@ export default async function usersRoutes(app: FastifyInstance) {
 			await fs.mkdir(uploadDir, { recursive: true });
 
 			await fs.writeFile(filepath, await data.toBuffer());
-			const baseUrl =
-				process.env.BASE_URL || `${request.protocol}://${request.hostname}`;
-			const avatarUrl = `${baseUrl}/uploads/avatars/${filename}`;
+			const avatarUrl = `/uploads/avatars/${filename}`;
 
 			const [oldUser] = await sql<PublicProfile[]>`
         SELECT avatar FROM users WHERE id = ${user.id}

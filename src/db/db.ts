@@ -1,14 +1,9 @@
 import postgres from "postgres";
-
 process.loadEnvFile();
 
 const connectionString =
-	process.env.DATABASE_URL || "postgres://user:password@localhost:5432/app_bdj";
+  process.env.DATABASE_URL ||
+  `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST || "localhost"}:${process.env.POSTGRES_PORT || 5432}/${process.env.POSTGRES_DB}`;
 
-const sql = postgres(connectionString, {
-	transform: {
-		undefined: null,
-	},
-});
-
+const sql = postgres(connectionString, { transform: { undefined: null }});
 export default sql;

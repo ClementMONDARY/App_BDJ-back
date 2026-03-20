@@ -72,9 +72,7 @@ export default async function authRoutes(app: FastifyInstance) {
 				if (imageFiles.length > 0) {
 					const randomFile =
 						imageFiles[Math.floor(Math.random() * imageFiles.length)];
-					const baseUrl =
-						process.env.BASE_URL || `${request.protocol}://${request.hostname}`;
-					avatarUrl = `${baseUrl}/assets/images/avatars/${randomFile}`;
+					avatarUrl = `/assets/images/avatars/${randomFile}`;
 				} else {
 					// Fallback if no images found
 					avatarUrl = `https://avatar.iran.liara.run/public?username=${username}`;
