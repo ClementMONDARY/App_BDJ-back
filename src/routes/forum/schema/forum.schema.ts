@@ -30,7 +30,7 @@ export const ZNewTopic = z.object({
 	title: z.string().min(1),
 	content: z.string().min(1),
 	cover_image: z.string().optional(),
-	attachment_urls: z.array(z.string()).max(5).optional(),
+	attachment_urls: z.array(z.string()).max(10).optional(),
 });
 
 export const ZNewPost = z.object({
