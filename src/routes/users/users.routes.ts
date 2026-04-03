@@ -31,6 +31,10 @@ const resolveAvatarUrl = (avatar: string | null, request: FastifyRequest) => {
 		}
 	}
 
+	if (!avatar.includes("/")) {
+		return `${baseUrl}/assets/images/avatars/${avatar}`;
+	}
+
 	return avatar;
 };
 import sql from "../../db/db.js";
