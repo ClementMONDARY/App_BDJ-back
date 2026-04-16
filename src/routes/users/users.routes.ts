@@ -7,7 +7,7 @@ import { z } from "zod";
 const resolveAvatarUrl = (avatar: string | null, request: FastifyRequest) => {
 	if (!avatar) return null;
 	const baseUrl =
-		`${request.protocol}://${request.hostname}`;
+		process.env.BASE_URL || `${request.protocol}://${request.hostname}`;
 
 	if (avatar.startsWith("/")) {
 		return `${baseUrl}${avatar}`;
