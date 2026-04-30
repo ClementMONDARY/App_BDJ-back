@@ -52,6 +52,50 @@ INSERT INTO posts (id, topic_id, author_id, parent_id, content) VALUES
 (9,  1, 3, 8,    'Haha, classic Grace mindset!'),
 (10, 1, 4, 2,    'Alice, you always make everyone feel welcome!');
 
+INSERT INTO topics (id, author_id, title, content, cover_image, view_count, like_count, msg_count) VALUES
+(2, 3, 'Retour d''expérience stage développeur 2024',
+ 'Je reviens tout juste d''un stage de 6 mois dans une startup parisienne en tant que développeur full-stack. Stack utilisée : React Native, Node.js/Fastify et PostgreSQL. Points forts : équipe soudée, beaucoup d''autonomie dès la 2e semaine, revues de code très formatives. Point faible : les horaires étaient chargés en fin de sprint. N''hésitez pas à me poser vos questions !',
+ 'https://picsum.photos/seed/topic2/800/400', 85, 1, 5),
+(3, 4, 'Organisation du tournoi de foot inter-promos',
+ 'Je propose d''organiser un tournoi de football entre les différentes promotions le samedi 15 mars sur les terrains du campus. Équipes de 5, chaque promo peut en aligner jusqu''à 2. Pour s''inscrire, répondez ici avec le nom de votre équipe et la liste des joueurs. Arbitres bénévoles bienvenus ! Le gagnant remporte une pizza offerte par le BDJ.',
+ 'https://picsum.photos/seed/topic3/800/400', 42, 1, 3),
+(4, 5, 'Conseils pour un stage à l''étranger',
+ 'Bonjour à tous, je cherche un stage de fin d''études à l''étranger (UK ou Irlande). Quelqu''un a déjà fait ça ? Quelles démarches pour le visa, l''assurance, le logement ? Comment trouver des offres ? Y a-t-il des aides financières disponibles ? Merci d''avance !',
+ NULL, 31, 1, 2),
+(5, 6, 'Idées pour la prochaine soirée BDJ',
+ 'Le BDJ organise sa prochaine soirée le mois prochain et on cherche des idées originales ! L''an dernier on avait fait un karaoké mémorable. Cette année on veut quelque chose de différent. Pistes envisagées : soirée jeux de société, bowling, escape game, soirée déguisée. Votez en commentaire et proposez vos idées ! Budget : environ 15 € par personne.',
+ 'https://picsum.photos/seed/topic5/800/400', 198, 2, 8);
+
+INSERT INTO posts (id, topic_id, author_id, parent_id, content) VALUES
+(11, 2, 1, NULL, 'Super retour d''expérience Charlie ! Fastify c''est vraiment top pour les perfs.'),
+(12, 2, 2, 11,   'Tout à fait, on l''utilise aussi sur nos projets internes.'),
+(13, 2, 4, NULL, 'Quelles étaient les conditions de rémunération si c''est pas indiscret ?'),
+(14, 2, 3, 13,   'Gratification légale + tickets restaurant, la norme en startup.'),
+(15, 2, 7, NULL, 'Merci pour le partage ! Tu as un contact là-bas si on cherche un stage ?'),
+(16, 3, 1, NULL, 'Je suis partante ! Je monte une équipe avec des filles de ma promo.'),
+(17, 3, 2, NULL, 'On s''inscrit aussi côté promo 2023. On vous attend sur le terrain !'),
+(18, 3, 5, 16,   'Super ! On sera peut-être dans la même poule Alice.'),
+(19, 4, 1, NULL, 'J''ai fait un stage à Londres l''an dernier. Pour moins de 6 mois, le visa n''est plus requis post-Brexit, mais vérifie bien les conditions actuelles.'),
+(20, 4, 6, NULL, 'Ouvre un compte bancaire local dès ton arrivée, ça évite les frais de change.'),
+(21, 5, 1, NULL, 'Soirée jeux de société pour moi !'),
+(22, 5, 2, 21,   '+1 pour les jeux de société, Catan ou 7 Wonders !'),
+(23, 5, 3, NULL, 'Soirée bowling ? Ça faisait longtemps !'),
+(24, 5, 4, 23,   'Le bowling c''est toujours sympa en groupe.'),
+(25, 5, 7, NULL, 'Escape game ce serait original ! On n''a jamais fait ça ensemble.'),
+(26, 5, 5, 25,   'Super idée ! Ça renforce la cohésion.'),
+(27, 5, 1, 25,   '+1 pour l''escape game !'),
+(28, 5, 6, NULL, 'Karaokéééé ! La soirée de l''année dernière était légendaire.');
+
+-- Topic follows (like_count reflects number of follows)
+INSERT INTO topic_follows (user_id, topic_id) VALUES
+(2, 1), (3, 1),
+(4, 2),
+(1, 3),
+(5, 4),
+(2, 5), (7, 5);
+
+UPDATE topics SET like_count = 2 WHERE id = 1;
+
 -- 4. Events (Utilisation de l'ID de Bob 2 comme organisateur)
 INSERT INTO events (id, organizer_id, title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees) VALUES
 (1, 2, 'Launch Party', 'Join us!', 'https://picsum.photos/seed/event1/800/400', NOW() + interval '7 days', NOW() + interval '7 days 4 hours', 'Main Hall', 4.95, 100, 1);
@@ -118,8 +162,8 @@ INSERT INTO questions (id, user_id, message, answer, status, created_at) VALUES
 -- --------------------------------------------------------------------------------
 ALTER SEQUENCE users_id_seq RESTART WITH 8;
 ALTER SEQUENCE articles_id_seq RESTART WITH 2;
-ALTER SEQUENCE topics_id_seq RESTART WITH 2;
-ALTER SEQUENCE posts_id_seq RESTART WITH 11;
+ALTER SEQUENCE topics_id_seq RESTART WITH 6;
+ALTER SEQUENCE posts_id_seq RESTART WITH 29;
 ALTER SEQUENCE events_id_seq RESTART WITH 2;
 ALTER SEQUENCE notifications_id_seq RESTART WITH 21;
 ALTER SEQUENCE conversations_id_seq RESTART WITH 2;
