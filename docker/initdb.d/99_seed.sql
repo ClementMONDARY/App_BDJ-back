@@ -96,13 +96,17 @@ INSERT INTO topic_follows (user_id, topic_id) VALUES
 
 UPDATE topics SET like_count = 2 WHERE id = 1;
 
--- 4. Events (Utilisation de l'ID de Bob 2 comme organisateur)
+-- Events
 INSERT INTO events (id, organizer_id, title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees) VALUES
-(1, 2, 'Launch Party', 'Join us!', 'https://picsum.photos/seed/event1/800/400', NOW() + interval '7 days', NOW() + interval '7 days 4 hours', 'Main Hall', 4.95, 100, 1);
+(1, 2, 'Launch Party', 'Join us for the launch of our new platform! Food, drinks, and good vibes guaranteed.', 'https://picsum.photos/seed/event1/800/400', NOW() + interval '7 days', NOW() + interval '7 days 4 hours', 'Main Hall', 4.95, 100, 1),
+(2, 2, 'Soirée JDR', 'Une soirée autour d''une partie de jeu de rôle, pour les experts ou débutants, tout le monde est accepté et encouragé à passer un bon moment avec nos maîtres du jeu.', 'https://picsum.photos/seed/event2/800/400', NOW() + interval '3 days', NOW() + interval '3 days 3 hours', 'Salle B', null, 5, 3),
+(3, 2, 'Concert Acoustique', 'Une soirée musicale intime avec nos artistes locaux. Places très limitées.', 'https://picsum.photos/seed/event3/800/400', NOW() + interval '14 days', NOW() + interval '14 days 2 hours', 'Amphithéâtre', 9.99, 4, 4),
+(4, 2, 'Atelier Passé', 'Cet événement est terminé. Visible uniquement via le filtre "Tous".', 'https://picsum.photos/seed/event4/800/400', NOW() - interval '7 days', NOW() - interval '7 days 2 hours', 'Salle A', null, 20, 12);
 
--- Alice is registered to the event
+-- Alice (user_id=1) est inscrite à l'event 1
 INSERT INTO event_registrations (event_id, user_id, status) VALUES
 (1, 1, 'registered');
+
 
 -- 5. Notifications
 INSERT INTO notifications (id, user_id, type, title, content, is_read, resource_data) VALUES
@@ -164,7 +168,7 @@ ALTER SEQUENCE users_id_seq RESTART WITH 8;
 ALTER SEQUENCE articles_id_seq RESTART WITH 2;
 ALTER SEQUENCE topics_id_seq RESTART WITH 6;
 ALTER SEQUENCE posts_id_seq RESTART WITH 29;
-ALTER SEQUENCE events_id_seq RESTART WITH 2;
+ALTER SEQUENCE events_id_seq RESTART WITH 3;
 ALTER SEQUENCE notifications_id_seq RESTART WITH 21;
 ALTER SEQUENCE conversations_id_seq RESTART WITH 2;
 ALTER SEQUENCE suggestions_id_seq RESTART WITH 2;
