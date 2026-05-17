@@ -35,9 +35,11 @@
 		"format": "biome format --write",
 		"autofix": "biome check --write",
 		"test": "vitest run",
+		"docker:build": "docker compose --env-file .env up -d --build api",
 		"docker:run": "docker compose --env-file .env up -d",
 		"docker:down": "docker compose --env-file .env down -v",
 		"docker:restart": "docker compose --env-file .env down -v && docker compose --env-file .env up -d",
+		"docker:restart-build": "docker compose --env-file .env down -v && docker compose --env-file .env up -d --build api",
 		"docker:bash": "docker compose --env-file .env exec db bash",
 		"docker:psql": "docker compose --env-file .env exec db sh -c \"psql -U $POSTGRES_USER -d $POSTGRES_DB\"",
 		"docker:logs": "docker compose logs -f"

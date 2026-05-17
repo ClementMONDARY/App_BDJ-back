@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import sql from "../../db/db.js";
-import { authenticate, requireRole } from "../../plugins/auth.js";
+import { authenticate, requireRole, verifyAccessToken } from "../../plugins/auth.js";
 import {
 	createNotification,
 	notifyAllUsers,
@@ -26,10 +26,27 @@ export default async function eventsRoutes(app: FastifyInstance) {
 				},
 			},
 		},
-		async (_request, reply) => {
+		async (request, reply) => {
+			let userId: number | null = null;
+			const authHeader = request.headers.authorization;
+			if (authHeader?.startsWith("Bearer ")) {
+				const token = authHeader.split(" ")[1];
+				const user = await verifyAccessToken(token);
+				if (user) userId = user.id;
+			}
+
 			const events = await sql<Event[]>`
-                SELECT * FROM events
-                ORDER BY start_time ASC
+                SELECT
+                    e.*,
+                    ${userId !== null
+						? sql`EXISTS(
+							SELECT 1 FROM event_registrations
+							WHERE event_id = e.id AND user_id = ${userId}
+						)`
+						: sql`false`
+					} AS is_registered
+                FROM events e
+                ORDER BY e.start_time ASC
             `;
 			return reply.send(events);
 		},
@@ -48,8 +65,27 @@ export default async function eventsRoutes(app: FastifyInstance) {
 		},
 		async (request, reply) => {
 			const { id } = request.params;
+
+			let userId: number | null = null;
+			const authHeader = request.headers.authorization;
+			if (authHeader?.startsWith("Bearer ")) {
+				const token = authHeader.split(" ")[1];
+				const user = await verifyAccessToken(token);
+				if (user) userId = user.id;
+			}
+
 			const [event] = await sql<Event[]>`
-                SELECT * FROM events WHERE id = ${id}
+                SELECT
+                    e.*,
+                    ${userId !== null
+						? sql`EXISTS(
+							SELECT 1 FROM event_registrations
+							WHERE event_id = e.id AND user_id = ${userId}
+						)`
+						: sql`false`
+					} AS is_registered
+                FROM events e
+                WHERE e.id = ${id}
             `;
 			if (!event) return reply.status(404).send();
 			return reply.send(event);

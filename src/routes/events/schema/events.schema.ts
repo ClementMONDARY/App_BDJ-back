@@ -15,6 +15,7 @@ export const ZEvent = z.object({
 		.nullable(),
 	max_capacity: z.number().int().nullable(),
 	current_attendees: z.number().int(),
+	is_registered: z.boolean().optional(),
 	created_at: z.date(),
 	updated_at: z.date(),
 });
