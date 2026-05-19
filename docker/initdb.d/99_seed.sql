@@ -31,7 +31,11 @@ ON CONFLICT (user_id) DO NOTHING;
 
 -- 2. Articles
 INSERT INTO articles (id, author_id, title, content, cover_image, view_count, like_count) VALUES
-(1, 2, 'Welcome to the Platform', 'This is the first official article.', 'https://picsum.photos/seed/article1/800/400', 120, 2);
+(1, 2, 'Welcome to the Platform', 'Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque.', 'https://picsum.photos/seed/article1/800/400', 120, 2),
+(2, 2, 'Welcome to the Platform', 'This is the first official article.', 'https://picsum.photos/seed/article1/800/400', 120, 2),
+(3, 2, 'Welcome to the Platform', 'This is the first official article.', 'https://picsum.photos/seed/article1/800/400', 120, 2),
+(4, 2, 'Welcome to the Platform', 'This is the first official article.', 'https://picsum.photos/seed/article1/800/400', 120, 2),
+(5, 2, 'Welcome to the Platform', 'This is the first official article.', 'https://picsum.photos/seed/article1/800/400', 120, 2);
 
 INSERT INTO article_likes (user_id, article_id) VALUES
 (2, 1);
@@ -165,7 +169,7 @@ INSERT INTO questions (id, user_id, message, answer, status, created_at) VALUES
 -- 9. RESET SEQUENCES
 -- --------------------------------------------------------------------------------
 ALTER SEQUENCE users_id_seq RESTART WITH 8;
-ALTER SEQUENCE articles_id_seq RESTART WITH 2;
+ALTER SEQUENCE articles_id_seq RESTART WITH 6;
 ALTER SEQUENCE topics_id_seq RESTART WITH 6;
 ALTER SEQUENCE posts_id_seq RESTART WITH 29;
 ALTER SEQUENCE events_id_seq RESTART WITH 3;
