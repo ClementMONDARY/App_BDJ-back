@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import sql from "../../db/db.js";
-import { authenticate, requireRole } from "../../plugins/auth.js";
+import { authenticate, requireRole, verifyAccessToken } from "../../plugins/auth.js";
 import { createNotification } from "../../services/notifications.service.js";
 import {
 	type Article,
@@ -22,10 +22,27 @@ export default async function articlesRoutes(app: FastifyInstance) {
 				},
 			},
 		},
-		async (_request, reply) => {
+		async (request, reply) => {
+			let userId: number | null = null;
+			const authHeader = request.headers.authorization;
+			if (authHeader?.startsWith("Bearer ")) {
+				const token = authHeader.split(" ")[1];
+				const user = await verifyAccessToken(token);
+				if (user) userId = user.id;
+			}
+
 			const articles = await sql<Article[]>`
-                SELECT * FROM articles
-                ORDER BY created_at DESC
+                SELECT
+                    a.*,
+                    ${userId !== null
+						? sql`EXISTS(
+							SELECT 1 FROM article_likes
+							WHERE article_id = a.id AND user_id = ${userId}
+						)`
+						: sql`false`
+					} AS is_liked
+                FROM articles a
+                ORDER BY a.created_at DESC
             `;
 
 			return reply.send(articles);
@@ -50,13 +67,31 @@ export default async function articlesRoutes(app: FastifyInstance) {
 		async (request, reply) => {
 			const { id } = request.params;
 
+			let userId: number | null = null;
+			const authHeader = request.headers.authorization;
+			if (authHeader?.startsWith("Bearer ")) {
+				const token = authHeader.split(" ")[1];
+				const user = await verifyAccessToken(token);
+				if (user) userId = user.id;
+			}
+
 			// Increment view count side-effect (could be optimized)
 			await sql`
                 UPDATE articles SET view_count = view_count + 1 WHERE id = ${id}
             `;
 
 			const [article] = await sql<Article[]>`
-                SELECT * FROM articles WHERE id = ${id}
+                SELECT
+                    a.*,
+                    ${userId !== null
+						? sql`EXISTS(
+							SELECT 1 FROM article_likes
+							WHERE article_id = a.id AND user_id = ${userId}
+						)`
+						: sql`false`
+					} AS is_liked
+                FROM articles a
+                WHERE a.id = ${id}
             `;
 
 			if (!article) {
