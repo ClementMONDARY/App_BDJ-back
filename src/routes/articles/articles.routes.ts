@@ -217,7 +217,7 @@ export default async function articlesRoutes(app: FastifyInstance) {
 					if (article?.author_id && article.author_id !== userId) {
 						await createNotification({
 							userId: article.author_id,
-							type: "article",
+							type: "articles",
 							title: `Article • New like on "${article.title}"`,
 							content: `${request.user.username} liked your article.`,
 							resourceData: { article_id: id },
