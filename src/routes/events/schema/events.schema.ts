@@ -25,7 +25,7 @@ export const ZRegistration = z.object({
 	event_id: z.number().int(),
 	user_id: z.number().int(),
 	status: z.enum(["registered", "cancelled", "waitlist"]),
-	registered_at: z.date(),
+	registered_at: z.coerce.date(),
 });
 
 export const ZNewEvent = z.object({
