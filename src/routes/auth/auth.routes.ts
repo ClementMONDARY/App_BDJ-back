@@ -12,7 +12,7 @@ import {
 	revokeRefreshToken,
 	verifyPassword,
 	verifyRefreshToken,
-} from "../../plugins/auth.js";
+} from "../../services/auth.service.js";
 import type { UserResponse } from "../users/schema/users.schema.js";
 import {
 	loginSchema,

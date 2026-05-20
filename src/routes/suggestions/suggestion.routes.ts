@@ -6,7 +6,7 @@ import {
 	authenticate,
 	requireRole,
 	verifyAccessToken,
-} from "../../plugins/auth.js";
+} from "../../services/auth.service.js";
 import { createNotification } from "../../services/notifications.service.js";
 import {
 	type Suggestion,

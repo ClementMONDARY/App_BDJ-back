@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import sql from "../../db/db.js";
-import { authenticate, requireRole, verifyAccessToken } from "../../plugins/auth.js";
+import { authenticate, requireRole, verifyAccessToken } from "../../services/auth.service.js";
 import { createNotification } from "../../services/notifications.service.js";
 import {
 	type Article,

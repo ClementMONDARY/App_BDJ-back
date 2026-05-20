@@ -38,7 +38,7 @@ const resolveAvatarUrl = (avatar: string | null, request: FastifyRequest) => {
 	return avatar;
 };
 import sql from "../../db/db.js";
-import { authenticate, hashPassword } from "../../plugins/auth.js";
+import { authenticate, hashPassword } from "../../services/auth.service.js";
 import {
 	type PublicProfile,
 	type UserPreview,
