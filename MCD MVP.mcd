@@ -1,0 +1,27 @@
+REPLIES_TO, 01 POSTS, 0N POSTS
+POSTS: _id, content, created_at, updated_at
+WRITES, 0N USERS, 11 ARTICLES
+ARTICLES: _id, title, content, cover_image, view_count, like_count, created_at, updated_at
+REFRESH_TOKENS: _token, expires_at, created_at
+:
+
+CONTAINS, 0N TOPICS, 11 POSTS
+FOLLOWS_TOPIC, 0N USERS, 0N TOPICS: followed_at
+AUTHORS, 0N USERS, 11 POSTS
+LIKES, 0N USERS, 0N ARTICLES: created_at
+REMEMBERS, 0N USERS, 11 REFRESH_TOKENS
+REGISTERS, 0N USERS, 0N EVENTS: status, registered_at
+
+:
+TOPICS: _id, title, content, cover_image, attachment_urls, view_count, like_count, msg_count, created_at, updated_at
+CREATES, 0N USERS, 11 TOPICS
+USERS: _id, username, firstname, lastname, avatar, bio, role, created_at
+ORGANIZES, 0N USERS, 11 EVENTS
+EVENTS: _id, title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees, created_at, updated_at
+
+:
+USER_AUTH: _email, password_hash
+AUTHORIZES, 11 USERS, 11 USER_AUTH
+RECEIVES, 0N USERS, 11 NOTIFICATIONS
+NOTIFICATIONS: _id, type, title, content, is_read, resource_data, created_at
+:
