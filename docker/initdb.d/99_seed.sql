@@ -31,14 +31,52 @@ ON CONFLICT (user_id) DO NOTHING;
 
 -- 2. Articles
 INSERT INTO articles (id, author_id, title, content, cover_image, view_count, like_count) VALUES
-(1, 2, 'Welcome to the Platform', 'Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque.', 'https://picsum.photos/seed/article1/800/400', 120, 2),
-(2, 2, 'Welcome to the Platform', 'This is the first official article.', 'https://picsum.photos/seed/article1/800/400', 120, 2),
-(3, 2, 'Welcome to the Platform', 'This is the first official article.', 'https://picsum.photos/seed/article1/800/400', 120, 2),
-(4, 2, 'Welcome to the Platform', 'This is the first official article.', 'https://picsum.photos/seed/article1/800/400', 120, 2),
-(5, 2, 'Welcome to the Platform', 'This is the first official article.', 'https://picsum.photos/seed/article1/800/400', 120, 2);
+(1, 2, 'Bienvenue sur la plateforme BDJ !', 'Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque.', 'https://picsum.photos/seed/article1/800/400', 320, 14),
+(2, 2, 'Guide complet pour trouver un stage à l''étranger', 'Partir en stage à l''étranger est une expérience qui marque une carrière. Que ce soit au Royaume-Uni, en Irlande, en Allemagne ou au Canada, les opportunités sont nombreuses pour les étudiants qui savent où chercher. Dans cet article, nous vous guidons pas à pas : de la recherche d''offres jusqu''à votre arrivée sur place.
+
+Commencez par identifier les plateformes dédiées : LinkedIn, Indeed International, Erasmus+, et les sites propres à chaque pays cible. N''oubliez pas le réseau de votre école, souvent sous-exploité.
+
+Côté administratif, renseignez-vous tôt sur les visas (certains nécessitent 3 mois de délai), l''assurance maladie internationale, et les aides financières disponibles (OFII, région, bourse Erasmus). Pensez aussi à ouvrir un compte bancaire local dès votre arrivée pour éviter les frais de change.
+
+Sur place, restez curieux et proactif. Les stages à l''étranger sont souvent plus autonomes qu''en France : c''est une chance de vous démarquer. Bonne chance à tous !', 'https://picsum.photos/seed/article2/800/400', 187, 9),
+(3, 2, 'Débuter en développement web : par où commencer en 2025 ?', 'Le développement web attire chaque année de nombreux étudiants et reconvertis. Mais face à la multitude de langages, frameworks et tutoriels disponibles, difficile de savoir par où commencer. Voici une feuille de route claire et progressive.
+
+Étape 1 — Les bases : HTML, CSS, JavaScript. Pas de raccourci possible. Maîtrisez le DOM, les sélecteurs CSS, et la manipulation du DOM en JS vanilla avant de passer à un framework.
+
+Étape 2 — Choisissez un framework frontend. En 2025, React reste le plus demandé sur le marché, mais Vue.js et Svelte gagnent du terrain. Choisissez en fonction de vos objectifs professionnels.
+
+Étape 3 — Le backend. Node.js avec Express ou Fastify pour rester en JavaScript, ou Python avec FastAPI si vous venez de la data. Apprenez les bases des API REST, de l''authentification et des bases de données relationnelles (PostgreSQL).
+
+Étape 4 — Les outils du quotidien : Git, Docker, et un peu de CI/CD. Ces compétences font souvent la différence en entretien.
+
+Restez curieux, construisez des projets concrets, et n''hésitez pas à contribuer à des projets open source. La communauté est là pour vous aider.', 'https://picsum.photos/seed/article3/800/400', 412, 31),
+(4, 2, 'Retour sur notre soirée karaoké : une nuit inoubliable', 'Vendredi soir, le BDJ a mis le feu à la salle avec sa soirée karaoké annuelle. Plus de 80 étudiants réunis, des voix aussi diverses que talentueuses (ou pas, et c''est tout aussi bien), et une ambiance qui restera dans les mémoires.
+
+La soirée a démarré timidement — comme toujours, les premières prestations sont celles des courageux. Mention spéciale à Frank et Diana pour leur duo improvisé sur "Don''t Stop Believin''" qui a littéralement déclenché une standing ovation.
+
+Le point culminant ? Grace, habituellement si discrète, qui a enchaîné un medley de chansons des années 80 avec une aisance déconcertante. Personne ne l''avait vue venir.
+
+Le BDJ remercie tous les participants, les bénévoles qui ont géré la sono et l''accueil, ainsi que le staff de la salle. Rendez-vous l''année prochaine pour une édition encore plus grande. Et oui, il y aura une coupe du monde de karaoké inter-promos.', 'https://picsum.photos/seed/article4/800/400', 256, 22),
+(5, 2, 'Sécurité numérique : 5 réflexes essentiels pour les étudiants', 'On parle souvent de cybersécurité comme d''un sujet réservé aux experts. Pourtant, en tant qu''étudiant, vous êtes une cible privilégiée : emails institutionnels, accès aux réseaux de l''école, données personnelles... Voici 5 réflexes simples à adopter dès maintenant.
+
+1. Utilisez un gestionnaire de mots de passe. Bitwarden, 1Password ou KeePass : choisissez-en un et arrêtez de réutiliser le même mot de passe partout. C''est la première source de compromission.
+
+2. Activez la double authentification (2FA) partout où c''est possible. Gmail, GitHub, Discord... Un SMS ou une app comme Authy suffit à bloquer 99% des attaques par credential stuffing.
+
+3. Méfiez-vous du phishing. Les mails d''hameçonnage imitent parfaitement les communications officielles. Vérifiez toujours l''adresse expéditrice et ne cliquez jamais sur un lien sans l''avoir inspecté.
+
+4. Mettez à jour vos appareils. Les mises à jour corrigent des failles de sécurité critiques. Activez les mises à jour automatiques.
+
+5. Évitez les Wi-Fi publics pour des opérations sensibles. Si vous devez les utiliser, passez par un VPN.
+
+La sécurité numérique, ça s''apprend. Et vous avez toutes les ressources pour le faire.', 'https://picsum.photos/seed/article5/800/400', 143, 7);
 
 INSERT INTO article_likes (user_id, article_id) VALUES
-(2, 1);
+(2, 1), (3, 1), (4, 1),
+(2, 2), (3, 2),
+(1, 3), (2, 3), (4, 3), (5, 3),
+(1, 4), (2, 4), (5, 4),
+(1, 5), (3, 5);
 
 -- 3. Forum (Topics & Posts, plus de categories)
 INSERT INTO topics (id, author_id, title, content, cover_image, attachment_urls, view_count, msg_count) VALUES
