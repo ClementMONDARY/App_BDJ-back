@@ -190,6 +190,31 @@ export default async function eventsRoutes(app: FastifyInstance) {
 	);
 
 	app.withTypeProvider<ZodTypeProvider>().delete(
+		"/:id",
+		{
+			preHandler: [authenticate, requireRole(["admin", "moderator"])],
+			schema: {
+				params: z.object({ id: z.coerce.number().int() }),
+				response: {
+					200: z.object({ message: z.string() }),
+					404: z.object({ message: z.string() }),
+				},
+			},
+		},
+		async (request, reply) => {
+			const { id } = request.params;
+
+			const [existing] = await sql`SELECT id FROM events WHERE id = ${id}`;
+			if (!existing)
+				return reply.status(404).send({ message: "Event not found" });
+
+			await sql`DELETE FROM events WHERE id = ${id}`;
+
+			return reply.status(200).send({ message: "Event deleted" });
+		},
+	);
+
+	app.withTypeProvider<ZodTypeProvider>().delete(
 		"/:id/register",
 		{
 			preHandler: [authenticate],

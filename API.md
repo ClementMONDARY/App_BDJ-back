@@ -40,7 +40,7 @@ Detailed documentation of all available API endpoints and their corresponding sc
 | `GET` | `/articles/:id` | Public | Get details of a single article. | - | [ZArticle](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/articles/schema/articles.schema.ts#L3) |
 | `POST` | `/articles/` | **Admin/Mod** | Create a new article. | [ZNewArticle](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/articles/schema/articles.schema.ts#L15) | [ZArticle](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/articles/schema/articles.schema.ts#L3) |
 | `PUT` | `/articles/:id` | **Author** | Update an existing article. | [ZUpdateArticle](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/articles/schema/articles.schema.ts#L21) | [ZArticle](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/articles/schema/articles.schema.ts#L3) |
-| `DELETE` | `/articles/:id` | **Author** | Delete an article. | - | [messageResponseSchema](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/auth/schema/auth.schema.ts#L29) |
+| `DELETE` | `/articles/:id` | **Admin/Mod** | Delete an article. | - | [messageResponseSchema](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/auth/schema/auth.schema.ts#L29) |
 | `POST` | `/articles/:id/like` | User | Toggle like status on an article. | - | [messageResponseSchema](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/auth/schema/auth.schema.ts#L29) |
 
 ---
@@ -64,6 +64,7 @@ Detailed documentation of all available API endpoints and their corresponding sc
 | `GET` | `/events/` | Public | List all upcoming events. | - | [ZEventList](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/events/schema/events.schema.ts#L41) |
 | `GET` | `/events/:id` | Public | Get details of a specific event. | - | [ZEvent](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/events/schema/events.schema.ts#L3) |
 | `POST` | `/events/` | **Admin** | Create a new event and notify users. | [ZNewEvent](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/events/schema/events.schema.ts#L30) | [ZEvent](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/events/schema/events.schema.ts#L3) |
+| `DELETE` | `/events/:id` | **Admin/Mod** | Delete an event. | - | [messageResponseSchema](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/auth/schema/auth.schema.ts#L29) |
 | `POST` | `/events/:id/register` | User | Register for an event / Join. | - | [ZRegistration](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/events/schema/events.schema.ts#L22) |
 | `DELETE` | `/events/:id/register` | User | Unregister from an event / Leave. | - | [messageResponseSchema](https://github.com/ClementMONDARY/App_BDJ-back/blob/main/src/routes/auth/schema/auth.schema.ts#L29) |
 
