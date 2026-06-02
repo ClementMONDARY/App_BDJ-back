@@ -9,7 +9,6 @@ import {
 	ZArticle,
 	ZArticleList,
 	ZNewArticle,
-	ZUpdateArticle,
 } from "./schema/articles.schema.js";
 
 export default async function articlesRoutes(app: FastifyInstance) {
@@ -135,7 +134,7 @@ export default async function articlesRoutes(app: FastifyInstance) {
 				params: z.object({
 					id: z.coerce.number().int(),
 				}),
-				body: ZUpdateArticle,
+				body: ZNewArticle,
 				response: {
 					200: ZArticle,
 					403: z.object({
@@ -150,8 +149,8 @@ export default async function articlesRoutes(app: FastifyInstance) {
 		async (request, reply) => {
 			const { id } = request.params;
 			const userId = request.user.id;
+			const { title, content, cover_image } = request.body;
 
-			// Check ownership
 			const [existing] =
 				await sql`SELECT author_id FROM articles WHERE id = ${id}`;
 			if (!existing)
@@ -163,7 +162,11 @@ export default async function articlesRoutes(app: FastifyInstance) {
 
 			const [article] = await sql<Article[]>`
                 UPDATE articles
-                SET ${sql(request.body as object)}, updated_at = NOW()
+                SET
+                    title = ${title},
+                    content = ${content},
+                    cover_image = ${cover_image || null},
+                    updated_at = NOW()
                 WHERE id = ${id}
                 RETURNING *
             `;
@@ -175,16 +178,13 @@ export default async function articlesRoutes(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().delete(
 		"/:id",
 		{
-			preHandler: [authenticate],
+			preHandler: [authenticate, requireRole(["admin", "moderator"])],
 			schema: {
 				params: z.object({
 					id: z.coerce.number().int(),
 				}),
 				response: {
 					200: z.object({
-						message: z.string(),
-					}),
-					403: z.object({
 						message: z.string(),
 					}),
 					404: z.object({
@@ -195,20 +195,12 @@ export default async function articlesRoutes(app: FastifyInstance) {
 		},
 		async (request, reply) => {
 			const { id } = request.params;
-			const userId = request.user.id;
 
-			const [existing] =
-				await sql`SELECT author_id FROM articles WHERE id = ${id}`;
+			const [existing] = await sql`SELECT id FROM articles WHERE id = ${id}`;
 			if (!existing)
 				return reply.status(404).send({ message: "Article not found" });
-			if (existing.author_id !== userId)
-				return reply
-					.status(403)
-					.send({ message: "You are not the author of this article" });
 
-			await sql`
-                DELETE FROM articles WHERE id = ${id}
-            `;
+			await sql`DELETE FROM articles WHERE id = ${id}`;
 
 			return reply.status(200).send({ message: `Article deleted` });
 		},

@@ -189,6 +189,71 @@ export default async function eventsRoutes(app: FastifyInstance) {
 		},
 	);
 
+	app.withTypeProvider<ZodTypeProvider>().put(
+		"/:id",
+		{
+			preHandler: [authenticate, requireRole(["admin"])],
+			schema: {
+				params: z.object({ id: z.coerce.number().int() }),
+				body: ZNewEvent,
+				response: {
+					200: ZEvent,
+					404: z.object({ message: z.string() }),
+				},
+			},
+		},
+		async (request, reply) => {
+			const { id } = request.params;
+			const { title, description, cover_image, start_time, end_time, location, price, max_capacity } = request.body;
+
+			const [existing] = await sql`SELECT id FROM events WHERE id = ${id}`;
+			if (!existing) return reply.status(404).send({ message: "Event not found" });
+
+			const [event] = await sql<Event[]>`
+                UPDATE events
+                SET
+                    title = ${title},
+                    description = ${description},
+                    cover_image = ${cover_image || null},
+                    start_time = ${start_time},
+                    end_time = ${end_time},
+                    location = ${location},
+                    price = ${price ?? 0},
+                    max_capacity = ${max_capacity || null},
+                    updated_at = NOW()
+                WHERE id = ${id}
+                RETURNING *
+            `;
+
+			return reply.send(event);
+		},
+	);
+
+	app.withTypeProvider<ZodTypeProvider>().delete(
+		"/:id",
+		{
+			preHandler: [authenticate, requireRole(["admin", "moderator"])],
+			schema: {
+				params: z.object({ id: z.coerce.number().int() }),
+				response: {
+					200: z.object({ message: z.string() }),
+					404: z.object({ message: z.string() }),
+				},
+			},
+		},
+		async (request, reply) => {
+			const { id } = request.params;
+
+			const [existing] = await sql`SELECT id FROM events WHERE id = ${id}`;
+			if (!existing)
+				return reply.status(404).send({ message: "Event not found" });
+
+			await sql`DELETE FROM events WHERE id = ${id}`;
+
+			return reply.status(200).send({ message: "Event deleted" });
+		},
+	);
+
 	app.withTypeProvider<ZodTypeProvider>().delete(
 		"/:id/register",
 		{
