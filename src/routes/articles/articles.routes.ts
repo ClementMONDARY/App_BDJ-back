@@ -9,7 +9,6 @@ import {
 	ZArticle,
 	ZArticleList,
 	ZNewArticle,
-	ZUpdateArticle,
 } from "./schema/articles.schema.js";
 
 export default async function articlesRoutes(app: FastifyInstance) {
@@ -135,7 +134,7 @@ export default async function articlesRoutes(app: FastifyInstance) {
 				params: z.object({
 					id: z.coerce.number().int(),
 				}),
-				body: ZUpdateArticle,
+				body: ZNewArticle,
 				response: {
 					200: ZArticle,
 					403: z.object({
@@ -150,8 +149,8 @@ export default async function articlesRoutes(app: FastifyInstance) {
 		async (request, reply) => {
 			const { id } = request.params;
 			const userId = request.user.id;
+			const { title, content, cover_image } = request.body;
 
-			// Check ownership
 			const [existing] =
 				await sql`SELECT author_id FROM articles WHERE id = ${id}`;
 			if (!existing)
@@ -163,7 +162,11 @@ export default async function articlesRoutes(app: FastifyInstance) {
 
 			const [article] = await sql<Article[]>`
                 UPDATE articles
-                SET ${sql(request.body as object)}, updated_at = NOW()
+                SET
+                    title = ${title},
+                    content = ${content},
+                    cover_image = ${cover_image || null},
+                    updated_at = NOW()
                 WHERE id = ${id}
                 RETURNING *
             `;

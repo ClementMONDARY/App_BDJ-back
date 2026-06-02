@@ -19,14 +19,7 @@ export const ZNewArticle = z.object({
 	cover_image: z.string().optional(),
 });
 
-export const ZUpdateArticle = z.object({
-	title: z.string().min(1).optional(),
-	content: z.string().min(1).optional(),
-	cover_image: z.string().optional(),
-});
-
 export const ZArticleList = z.array(ZArticle);
 
 export type Article = z.infer<typeof ZArticle>;
 export type NewArticle = z.infer<typeof ZNewArticle>;
-export type UpdateArticle = z.infer<typeof ZUpdateArticle>;
