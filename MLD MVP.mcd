@@ -1,0 +1,29 @@
+:
+:
+REFRESH_TOKEN: #user_id > USER > id, token, expires_at, created_at
+USER_AUTH: #user_id > USER > id, email, password_hash
+NOTIFICATION: id, #user_id > USER > id, type, title, content, is_read, resource_data, created_at
+:
+:
+
+:
+EVENT: id, #organizer_id > USER > id, title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees, created_at, updated_at
+EVENT_REGISTRATION: id, #event_id > EVENT > id, #user_id > USER > id, status, registered_at
+USER: id, username, avatar, role, firstname, lastname, bio, follower_count, following_count, created_at
+SUGGESTION_VOTE: id, #suggestion_id > SUGGESTION > id, #user_id > USER > id, type
+SUGGESTION: id, #user_id > USER > id, title, content, upvotes, downvotes, created_at
+:
+
+:
+:
+TOPIC: id, #author_id > USER > id, title, content, cover_image, attachment_urls, view_count, like_count, msg_count, created_at, updated_at
+TOPIC_FOLLOW: #user_id > USER > id, #topic_id > TOPIC > id, followed_at
+LIKES_ARTICLE: #user_id > USER > id, _#article_id > ARTICLE > id, created_at
+ARTICLE: id, #author_id > USER > id, title, content, cover_image, view_count, like_count, created_at, updated_at
+:
+
+:
+:
+POST: id, #author_id > USER > id, #topic_id > TOPIC > id, content, #parent_id > POST > id, created_at, updated_at
+:
+:
