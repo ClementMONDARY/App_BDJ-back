@@ -8,9 +8,9 @@ NOTIFICATION: id, #user_id > USER > id, type, title, content, is_read, resource_
 
 :
 EVENT: id, #organizer_id > USER > id, title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees, created_at, updated_at
-EVENT_REGISTRATION: id, #event_id > EVENT > id, #user_id > USER > id, status, registered_at
+EVENT_REGISTRATION: #event_id > EVENT > id, #user_id > USER > id, status, registered_at
 USER: id, username, avatar, role, firstname, lastname, bio, follower_count, following_count, created_at
-SUGGESTION_VOTE: id, #suggestion_id > SUGGESTION > id, #user_id > USER > id, type
+SUGGESTION_VOTE: #suggestion_id > SUGGESTION > id, #user_id > USER > id, type
 SUGGESTION: id, #user_id > USER > id, title, content, upvotes, downvotes, created_at
 :
 

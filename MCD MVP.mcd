@@ -1,27 +1,27 @@
 REPLIES_TO, 01 POSTS, 0N POSTS
-POSTS: id, content, created_at, updated_at
+POSTS: content
 WRITES, 0N USERS, 11 ARTICLES
-ARTICLES: id, title, content, cover_image, view_count, like_count, created_at, updated_at
-REFRESH_TOKENS: token, expires_at, created_at
-:
+ARTICLES: title, content, cover_image, view_count, like_count
+REFRESH_TOKENS: token, expires_at
+SUGGESTIONS: title, content, upvotes, downvotes
 
 CONTAINS, 0N TOPICS, 11 POSTS
-FOLLOWS_TOPIC, 0N USERS, 0N TOPICS: followed_at
+FOLLOWS_TOPIC, 0N USERS, 0N TOPICS
 AUTHORS, 0N USERS, 11 POSTS
-LIKES, 0N USERS, 0N ARTICLES: created_at
+LIKES, 0N USERS, 0N ARTICLES
 REMEMBERS, 0N USERS, 11 REFRESH_TOKENS
-REGISTERS, 0N USERS, 0N EVENTS: status, registered_at
+VOTES, 0N SUGGESTIONS, 0N USERS: type
 
 :
-TOPICS: id, title, content, cover_image, attachment_urls, view_count, like_count, msg_count, created_at, updated_at
+TOPICS: title, content, cover_image, attachment_urls, view_count, like_count, msg_count
 CREATES, 0N USERS, 11 TOPICS
-USERS: id, username, firstname, lastname, avatar, bio, role, created_at
+USERS: username, firstname, lastname, avatar, bio, role
 ORGANIZES, 0N USERS, 11 EVENTS
-EVENTS: id, title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees, created_at, updated_at
+EVENTS: title, description, cover_image, start_time, end_time, location, price, max_capacity, current_attendees
 
 :
-USER_AUTH: user_id, email, password_hash
+USER_AUTH: user_email, password_hash
 AUTHORIZES, 11 USERS, 11 USER_AUTH
 RECEIVES, 0N USERS, 11 NOTIFICATIONS
-NOTIFICATIONS: id, type, title, content, is_read, resource_data, created_at
-:
+NOTIFICATIONS: type, title, content, is_read, resource_data
+REGISTERS, 0N USERS, 0N EVENTS: status
