@@ -1,0 +1,57 @@
+
+graph LR
+    subgraph Acteurs
+        A1[Visiteur]
+        A2[Membre]
+        A3[Administrateur]
+    end
+
+    subgraph "Système BDJ App"
+        UC1([S'inscrire à l'association])
+        UC2([Se connecter / se déconnecter])
+        UC3([Consulter les événements])
+        UC4([Consulter les articles])
+        UC5([Consulter les suggestions])
+        
+        UC6([Consulter / modifier son profil])
+        UC7([Supprimer son compte])
+        UC8([S'inscrire à un événement])
+        UC9([Consulter son historique])
+        UC10([Participer au forum])
+        UC11([Créer un fil de discussion])
+        UC12([Soumettre une suggestion])
+        UC13([Recevoir/gérer des notifications in-app])
+
+        UC14([Gérer les événements])
+        UC15([Publier des articles])
+        UC16([Consulter le tableau de bord])
+    end
+
+    A1 --> UC1
+    A1 --> UC2
+    A1 --> UC3
+    A1 --> UC4
+    A1 --> UC5
+
+    A2 --> A1
+    A2 --> UC6
+    A2 --> UC7
+    A2 --> UC8
+    A2 --> UC9
+    A2 --> UC10
+    A2 --> UC11
+    A2 --> UC12
+    A2 --> UC13
+
+    A3 --> A2
+    A3 --> UC14
+    A3 --> UC15
+    A3 --> UC16
+
+    classDef acteur fill:#e1f5e1,stroke:#2d6a4f,stroke-width:2px,color:#1b4332
+    classDef visiteur fill:#fff3cd,stroke:#856404,color:#856404
+    classDef admin fill:#f8d7da,stroke:#721c24,color:#721c24
+
+    class A1 visiteur
+    class A2 acteur
+    class A3 admin

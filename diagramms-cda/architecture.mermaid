@@ -1,0 +1,29 @@
+graph LR
+    subgraph " "
+        direction TB
+        Mobile["Application Mobile<br/><i>iOS + Android</i><br/>Tier Présentation"]
+    end
+
+    subgraph " "
+        direction TB
+        API["Back-end / API REST<br/><i>Routes → Controllers → Services → Repositories</i><br/>Tier Applicatif"]
+    end
+
+    subgraph " "
+        direction TB
+        DB["Base de données<br/><i>PostgreSQL</i><br/>Tier Données"]
+    end
+
+    Mobile -- "HTTPS + JWT<br/>JSON" --> API
+    API -- "Réponses HTTP<br/>JSON" --> Mobile
+
+    API -- "Requêtes SQL<br/>" --> DB
+    DB -- "Données" --> API
+
+    classDef tier fill:#e8f4f8,stroke:#1f6f8b,stroke-width:2px,color:#000
+    classDef tierApp fill:#fff4e6,stroke:#d68910,stroke-width:2px,color:#000
+    classDef tierData fill:#f0e6ff,stroke:#6c3483,stroke-width:2px,color:#000
+
+    class Mobile tier
+    class API tierApp
+    class DB tierData

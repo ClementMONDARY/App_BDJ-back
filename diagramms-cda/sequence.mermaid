@@ -1,0 +1,40 @@
+sequenceDiagram
+    autonumber
+    participant M as Application mobile
+    participant A as API Back-end
+    participant DB as Base de données
+
+    Note over M,DB: Connexion initiale
+
+    M->>A: POST /auth/login (email, password)
+    A->>DB: Vérifier identifiants (user_auth)
+    DB-->>A: OK
+    A->>A: Générer access token (5 min)<br/>+ refresh token (15 j)
+    A->>DB: Stocker refresh token
+    A-->>M: { accessToken, refreshToken }
+    M->>M: Stocker dans SecureStorage
+
+    Note over M,DB: Requêtes API courantes
+
+    M->>A: GET /events<br/>Authorization: Bearer <access>
+    A->>A: Vérifier signature + expiration
+    A-->>M: 200 OK + données
+
+    Note over M,DB: Renouvellement après expiration
+
+    M->>A: GET /events<br/>Authorization: Bearer <access expiré>
+    A-->>M: 401 Unauthorized
+    M->>A: POST /auth/refresh<br/>{ refreshToken }
+    A->>DB: Vérifier que refresh existe et n'a pas expiré
+    DB-->>A: OK
+    A->>A: Générer nouveau access token
+    A-->>M: { accessToken }
+    M->>A: GET /events (avec nouveau access)
+    A-->>M: 200 OK + données
+
+    Note over M,DB: Déconnexion explicite
+
+    M->>A: POST /auth/logout<br/>{ refreshToken }
+    A->>DB: Supprimer refresh token
+    DB-->>A: OK
+    A-->>M: 204 No Content
