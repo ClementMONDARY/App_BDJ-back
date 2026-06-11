@@ -7,9 +7,12 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
 	test: {
 		env: {
-			POSTGRES_HOST: "localhost",
-			DATABASE_URL: "postgres://user:password@localhost:5432/app_bdj",
+			POSTGRES_HOST: process.env.POSTGRES_HOST ?? "localhost",
+			DATABASE_URL:
+				process.env.DATABASE_URL ??
+				"postgres://user:password@localhost:5432/app_bdj",
 		},
+
 		// Les fichiers de test s'exécutent chacun dans un worker isolé
 		// avec leurs propres instances de modules (connexion DB indépendante par fichier).
 		pool: "threads",
