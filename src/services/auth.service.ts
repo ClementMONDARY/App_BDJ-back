@@ -2,9 +2,8 @@ import { randomBytes } from "node:crypto";
 import * as argon2 from "argon2";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import * as jose from "jose";
+import "dotenv/config";
 import sql from "../db/db.js";
-
-process.loadEnvFile();
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
