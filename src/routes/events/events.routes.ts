@@ -145,6 +145,7 @@ export default async function eventsRoutes(app: FastifyInstance) {
 				response: {
 					200: ZRegistration,
 					404: z.null(),
+					409: z.object({ message: z.string() }),
 				},
 			},
 		},
@@ -152,11 +153,6 @@ export default async function eventsRoutes(app: FastifyInstance) {
 			const { id } = request.params;
 			const userId = request.user.id;
 
-			// Ensure event exists
-			const [event] = await sql<Event[]>`SELECT * FROM events WHERE id = ${id}`;
-			if (!event) return reply.status(404).send();
-
-			// Check if already registered
 			const [existing] = await sql<Registration[]>`
                 SELECT * FROM event_registrations WHERE event_id = ${id} AND user_id = ${userId}
              `;
@@ -164,8 +160,13 @@ export default async function eventsRoutes(app: FastifyInstance) {
 				return reply.send(existing);
 			}
 
-			// Register transaction: insert + increment attendees
 			const registration = await sql.begin(async (sql) => {
+				const [event] = await sql<Event[]>`
+                    SELECT id, title, max_capacity, current_attendees FROM events WHERE id = ${id} FOR UPDATE
+                `;
+				if (!event) return null;
+				if (event.max_capacity != null && event.current_attendees >= event.max_capacity) return "full";
+
 				const [reg] = await sql<Registration[]>`
                     INSERT INTO event_registrations (event_id, user_id, status)
                     VALUES (${id}, ${userId}, 'registered')
@@ -184,6 +185,9 @@ export default async function eventsRoutes(app: FastifyInstance) {
 
 				return reg;
 			});
+
+			if (registration === null) return reply.status(404).send();
+			if (registration === "full") return reply.status(409).send({ message: "Event is full" });
 
 			return reply.send(registration);
 		},
