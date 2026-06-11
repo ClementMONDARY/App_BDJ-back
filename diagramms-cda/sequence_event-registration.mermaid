@@ -1,0 +1,21 @@
+sequenceDiagram
+    autonumber
+    participant M as Mobile
+    participant A as API
+    participant DB as BDD
+
+    M->>A: POST /events/:id/register<br/>Authorization: Bearer <token>
+    A->>A: Hook authenticate (vérifie JWT)
+    A->>DB: SELECT event WHERE id = :id<br/>FOR UPDATE
+    DB-->>A: event { capacity, current_attendees }
+
+    alt Capacité atteinte
+        A-->>M: 409 Conflict<br/>{ error: "Event is full" }
+    else Place disponible
+        A->>DB: INSERT INTO event_registrations
+        DB-->>A: OK
+        A->>DB: UPDATE events SET current_attendees++
+        DB-->>A: OK
+        A->>A: Service createNotification
+        A-->>M: 201 Created<br/>{ registration }
+    end
