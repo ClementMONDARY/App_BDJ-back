@@ -1,5 +1,6 @@
+try { process.loadEnvFile(); } catch {}
+
 import postgres from "postgres";
-process.loadEnvFile();
 
 const connectionString =
   process.env.DATABASE_URL ||
