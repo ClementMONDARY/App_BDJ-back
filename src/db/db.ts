@@ -1,5 +1,4 @@
-try { process.loadEnvFile(); } catch {}
-
+import "dotenv/config";
 import postgres from "postgres";
 
 const connectionString =
