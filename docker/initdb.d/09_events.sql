@@ -17,12 +17,11 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TYPE registration_status AS ENUM ('registered', 'cancelled', 'waitlist');
 
 CREATE TABLE IF NOT EXISTS event_registrations (
-    id SERIAL PRIMARY KEY,
     event_id INT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     status registration_status DEFAULT 'registered',
     registered_at TIMESTAMPTZ DEFAULT NOW(),
-    UNIQUE(event_id, user_id)
+    PRIMARY KEY (event_id, user_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_events_start_time ON events(start_time);

@@ -9,11 +9,10 @@ CREATE TABLE IF NOT EXISTS suggestions (
 );
 
 CREATE TABLE IF NOT EXISTS suggestion_votes (
-    id SERIAL PRIMARY KEY,
     suggestion_id INT REFERENCES suggestions(id) ON DELETE CASCADE,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     type VARCHAR(10) CHECK (type IN ('up', 'down')),
-    UNIQUE (suggestion_id, user_id)
+    PRIMARY KEY (suggestion_id, user_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_suggestions_user_id ON suggestions(user_id);

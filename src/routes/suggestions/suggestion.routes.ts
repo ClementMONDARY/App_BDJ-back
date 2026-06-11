@@ -239,7 +239,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 
 			const result = await sql.begin(async (sql) => {
 				const [existingVote] = await sql`
-                    SELECT id, type FROM suggestion_votes
+                    SELECT type FROM suggestion_votes
                     WHERE suggestion_id = ${id} AND user_id = ${request.user.id}
                 `;
 
@@ -261,7 +261,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 				} else if (existingVote.type === type) {
 					await sql`
                         DELETE FROM suggestion_votes
-                        WHERE id = ${existingVote.id}
+                        WHERE suggestion_id = ${id} AND user_id = ${request.user.id}
                     `;
 					if (type === "up") upvoteDelta = -1;
 					else downvoteDelta = -1;
@@ -272,7 +272,7 @@ export default async function suggestionsRoutes(app: FastifyInstance) {
 					await sql`
                         UPDATE suggestion_votes
                         SET type = ${type}
-                        WHERE id = ${existingVote.id}
+                        WHERE suggestion_id = ${id} AND user_id = ${request.user.id}
                     `;
 					if (type === "up") {
 						// Was down, now up

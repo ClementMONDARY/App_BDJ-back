@@ -281,20 +281,20 @@ INSERT INTO suggestions (id, user_id, title, content, upvotes, downvotes) VALUES
 (3, 4, 'Calendrier partagé', 'Exporter le calendrier des événements au format .ics pour l''intégrer dans Google Calendar ou Outlook.', 3, 0),
 (4, 5, 'Filtres avancés',    'Pouvoir filtrer les articles par thème (tech, vie étudiante, événements) et les trier par date ou popularité.', 2, 1);
 
-INSERT INTO suggestion_votes (id, suggestion_id, user_id, type) VALUES
-(1,  1, 1, 'up'),    -- alice ↑ "Forum Section"
-(2,  2, 3, 'up'),    -- charlie ↑ "Mode sombre"
-(3,  2, 4, 'up'),    -- diana   ↑
-(4,  2, 5, 'up'),    -- eve     ↑
-(5,  2, 6, 'up'),    -- frank   ↑
-(6,  2, 7, 'up'),    -- grace   ↑
-(7,  2, 2, 'down'),  -- bob     ↓ "Mode sombre"
-(8,  3, 2, 'up'),    -- bob     ↑ "Calendrier partagé"
-(9,  3, 3, 'up'),    -- charlie ↑
-(10, 3, 4, 'up'),    -- diana   ↑
-(11, 4, 3, 'up'),    -- charlie ↑ "Filtres avancés"
-(12, 4, 7, 'up'),    -- grace   ↑
-(13, 4, 2, 'down');  -- bob     ↓ "Filtres avancés"
+INSERT INTO suggestion_votes (suggestion_id, user_id, type) VALUES
+(1, 1, 'up'),    -- alice ↑ "Forum Section"
+(2, 3, 'up'),    -- charlie ↑ "Mode sombre"
+(2, 4, 'up'),    -- diana   ↑
+(2, 5, 'up'),    -- eve     ↑
+(2, 6, 'up'),    -- frank   ↑
+(2, 7, 'up'),    -- grace   ↑
+(2, 2, 'down'),  -- bob     ↓ "Mode sombre"
+(3, 2, 'up'),    -- bob     ↑ "Calendrier partagé"
+(3, 3, 'up'),    -- charlie ↑
+(3, 4, 'up'),    -- diana   ↑
+(4, 3, 'up'),    -- charlie ↑ "Filtres avancés"
+(4, 7, 'up'),    -- grace   ↑
+(4, 2, 'down');  -- bob     ↓ "Filtres avancés"
 
 -- ═══════════════════════════════════════════════════════════════════
 -- 9. QUESTIONS & RÉPONSES
@@ -332,5 +332,4 @@ ALTER SEQUENCE events_id_seq            RESTART WITH 5;
 ALTER SEQUENCE notifications_id_seq     RESTART WITH 26;
 ALTER SEQUENCE conversations_id_seq     RESTART WITH 3;
 ALTER SEQUENCE suggestions_id_seq       RESTART WITH 5;
-ALTER SEQUENCE suggestion_votes_id_seq  RESTART WITH 14;
 ALTER SEQUENCE questions_id_seq         RESTART WITH 6;
